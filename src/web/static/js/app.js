@@ -9,6 +9,7 @@ let lightboxIndex = 0;
 let evtSource = null;
 let pipelineTimer = null;
 let pipelineStartTime = 0;
+let uploadedExcelFile = null;  // Keep reference to re-send across Vercel lambdas
 
 // --- Navigation ---
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -63,6 +64,7 @@ uploadZone.addEventListener('drop', (e) => {
 fileInput.addEventListener('change', () => { if (fileInput.files.length) uploadFile(fileInput.files[0]); });
 
 async function uploadFile(file) {
+    uploadedExcelFile = file;  // Keep reference for re-sending
     const form = new FormData();
     form.append('file', file);
     try {
@@ -143,10 +145,13 @@ async function startPipeline() {
     btnStart.textContent = 'Iniciando...';
 
     try {
+        const form = new FormData();
+        form.append('api_key', apiKey);
+        form.append('mode', mode);
+        if (uploadedExcelFile) form.append('file', uploadedExcelFile);
         const res = await fetch('/api/pipeline/start', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ api_key: apiKey, mode: mode }),
+            body: form,
         });
         const data = await res.json();
         if (res.ok) {
@@ -341,7 +346,9 @@ async function runPhaseExtract() {
     dataStatus.classList.add('hidden');
 
     try {
-        const res = await fetch('/api/phase/extract', { method: 'POST' });
+        const form = new FormData();
+        if (uploadedExcelFile) form.append('file', uploadedExcelFile);
+        const res = await fetch('/api/phase/extract', { method: 'POST', body: form });
         const data = await res.json();
         if (res.ok) {
             dataStatus.classList.remove('hidden', 'error');
@@ -443,7 +450,9 @@ async function runPhaseGraphs() {
     btnGenGraphs.textContent = 'Gerando gráficos...';
 
     try {
-        const res = await fetch('/api/phase/graphs', { method: 'POST' });
+        const form = new FormData();
+        if (uploadedExcelFile) form.append('file', uploadedExcelFile);
+        const res = await fetch('/api/phase/graphs', { method: 'POST', body: form });
         const data = await res.json();
         if (res.ok) {
             showToast(`${data.count} gráficos gerados!`, 'success');

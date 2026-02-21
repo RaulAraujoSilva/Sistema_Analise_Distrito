@@ -54,6 +54,24 @@ _state = {
     "pipeline_running": False,
 }
 
+
+async def ensure_excel_on_disk(file: UploadFile = None) -> Path:
+    """Ensure the Excel file exists on disk (/tmp).
+
+    On Vercel, each lambda has its own /tmp. If a previous upload went to
+    a different lambda, the file won't exist here. The frontend re-sends
+    the Excel with each phase request to handle this.
+    """
+    dest = DATA_DIR / EXCEL_DEFAULT
+    if file is not None:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        content = await file.read()
+        dest.write_bytes(content)
+        return dest
+    if dest.exists():
+        return dest
+    raise HTTPException(400, "Excel não encontrado. Faça upload primeiro.")
+
 # ---------------------------------------------------------------------------
 # Pipeline runner (lazy import to avoid circular deps)
 # ---------------------------------------------------------------------------
@@ -104,25 +122,31 @@ async def upload_excel(file: UploadFile = File(...)):
 # ---------------------------------------------------------------------------
 # Pipeline control API
 # ---------------------------------------------------------------------------
-class PipelineStartRequest(BaseModel):
-    api_key: str
-    mode: str = "gerar"  # "gerar", "resume", "montar"
-
-
 @app.post("/api/pipeline/start")
-async def pipeline_start(req: PipelineStartRequest):
-    """Start the pipeline in background."""
+async def pipeline_start(
+    api_key: str = "",
+    mode: str = "gerar",
+    file: UploadFile = File(None),
+):
+    """Start the pipeline in background.
+
+    Accepts multipart form: api_key, mode, and optional file (Excel).
+    The file is re-sent by the frontend to handle Vercel's ephemeral /tmp.
+    """
     runner = get_runner()
     if runner.is_running:
         raise HTTPException(409, "Pipeline já está em execução")
 
-    _state["api_key"] = req.api_key
+    # Ensure Excel is on disk (re-write from upload if needed)
+    await ensure_excel_on_disk(file)
+
+    _state["api_key"] = api_key
     runner.start(
-        api_key=req.api_key,
-        resume=(req.mode == "resume"),
-        montar=(req.mode == "montar"),
+        api_key=api_key,
+        resume=(mode == "resume"),
+        montar=(mode == "montar"),
     )
-    return {"status": "started", "mode": req.mode}
+    return {"status": "started", "mode": mode}
 
 
 @app.get("/api/pipeline/events")
@@ -288,11 +312,9 @@ async def list_downloads():
 # Phase-by-phase execution API
 # ---------------------------------------------------------------------------
 @app.post("/api/phase/extract")
-async def phase_extract():
+async def phase_extract(file: UploadFile = File(None)):
     """Phase 0a: Extract data from Excel, save as JSON."""
-    excel_path = DATA_DIR / EXCEL_DEFAULT
-    if not excel_path.exists():
-        raise HTTPException(400, "Excel não encontrado. Faça upload primeiro.")
+    excel_path = await ensure_excel_on_disk(file)
 
     try:
         from extrator_dados import extrair_todos, salvar_json
@@ -358,11 +380,9 @@ async def phase_extract_preview():
 
 
 @app.post("/api/phase/graphs")
-async def phase_graphs():
+async def phase_graphs(file: UploadFile = File(None)):
     """Phase 0b: Generate all graphs from Excel."""
-    excel_path = DATA_DIR / EXCEL_DEFAULT
-    if not excel_path.exists():
-        raise HTTPException(400, "Excel não encontrado. Faça upload primeiro.")
+    excel_path = await ensure_excel_on_disk(file)
 
     try:
         from graph_generator import gerar_todos_graficos
