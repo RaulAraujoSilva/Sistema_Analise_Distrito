@@ -3,13 +3,25 @@
 Configuração centralizada de caminhos do projeto.
 Todos os scripts e notebooks importam deste módulo.
 """
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# Dados de entrada
-DATA_DIR = PROJECT_ROOT / "data" / "input"
-APOSTILA_DIR = PROJECT_ROOT / "data" / "apostila"
+# Detect Vercel (read-only filesystem, writable /tmp only)
+IS_VERCEL = bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"))
+
+if IS_VERCEL:
+    _TMP = Path("/tmp")
+    DATA_DIR = _TMP / "data" / "input"
+    APOSTILA_DIR = PROJECT_ROOT / "data" / "apostila"  # read-only, bundled
+    OUTPUTS_DIR = _TMP / "outputs"
+    METODOLOGIA_DIR = PROJECT_ROOT / "metodologia"     # read-only, bundled
+else:
+    DATA_DIR = PROJECT_ROOT / "data" / "input"
+    APOSTILA_DIR = PROJECT_ROOT / "data" / "apostila"
+    OUTPUTS_DIR = PROJECT_ROOT / "outputs"
+    METODOLOGIA_DIR = PROJECT_ROOT / "metodologia"
 
 # Código-fonte
 SRC_DIR = PROJECT_ROOT / "src"
@@ -17,16 +29,15 @@ SRC_DIR = PROJECT_ROOT / "src"
 # Notebooks
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 
-# Outputs
-OUTPUTS_DIR = PROJECT_ROOT / "outputs"
+# Outputs (always derived from OUTPUTS_DIR)
 GRAFICOS_DIR = OUTPUTS_DIR / "graficos"
 DIAGRAMAS_DIR = OUTPUTS_DIR / "diagramas"
 REPORTS_DIR = OUTPUTS_DIR / "reports"
 PRESENT_DIR = OUTPUTS_DIR / "presentations"
 CACHE_DIR = OUTPUTS_DIR / "cache"
 
-# Intermediários
-METODOLOGIA_DIR = PROJECT_ROOT / "metodologia"
+# Intermediários (already set above)
+# METODOLOGIA_DIR defined above
 
 # Arquivo Excel padrão (para automação futura)
 EXCEL_DEFAULT = "Analise de Condições de Operação de Distrito.xlsx"

@@ -19,7 +19,7 @@ import time
 
 from config import (
     PROJECT_ROOT, DATA_DIR, GRAFICOS_DIR, DIAGRAMAS_DIR,
-    CACHE_DIR, REPORTS_DIR, PRESENT_DIR, EXCEL_DEFAULT,
+    CACHE_DIR, REPORTS_DIR, PRESENT_DIR, EXCEL_DEFAULT, IS_VERCEL,
 )
 from prompts_auditoria import CHAPTER_CONFIG
 
@@ -32,6 +32,11 @@ app = FastAPI(title="Auditoria de Distrito de Gás", version="1.0")
 
 # Static files
 app.mount("/static", StaticFiles(directory=str(WEB_DIR / "static")), name="static")
+
+# On Vercel, create writable output dirs in /tmp at startup
+if IS_VERCEL:
+    for d in [DATA_DIR, GRAFICOS_DIR, DIAGRAMAS_DIR, REPORTS_DIR, PRESENT_DIR, CACHE_DIR]:
+        d.mkdir(parents=True, exist_ok=True)
 
 # Serve output files (graphs, diagrams, reports, presentations)
 if GRAFICOS_DIR.exists():
