@@ -198,7 +198,7 @@ def add_image(slide, left, top, width, filename):
         shape.shadow.inherit = False
         tf = shape.text_frame
         p = tf.paragraphs[0]
-        p.text = f'[Grafico: {filename}]'
+        p.text = f'[Gráfico: {filename}]'
         p.font.size = Pt(12)
         p.font.color.rgb = RGBColor(0x9E, 0x9E, 0x9E)
         p.alignment = PP_ALIGN.CENTER
@@ -227,12 +227,12 @@ def gerar_apresentacao():
     line.shadow.inherit = False
 
     add_textbox(slide, 1, 1.5, 11.3, 1.2,
-            'Analise de Condicoes de Operacao de Distrito',
+            'Análise de Condições de Operação de Distrito',
             font_size=40, font_color=BRANCO, bold=True,
             alignment=PP_ALIGN.CENTER)
 
     add_textbox(slide, 1, 2.8, 11.3, 0.8,
-            'Reproducao da Analise com Python e Inteligencia Artificial',
+            'Reprodução da Análise com Python e Inteligência Artificial',
             font_size=24, font_color=AZUL_CLARO, bold=False,
             alignment=PP_ALIGN.CENTER)
 
@@ -246,12 +246,12 @@ def gerar_apresentacao():
     div.shadow.inherit = False
 
     add_textbox(slide, 1, 4.2, 11.3, 0.6,
-            'Curso ABAR - Medicoes Inteligentes e Gestao Integrada',
+            'Curso ABAR - Medições Inteligentes e Gestão Integrada',
             font_size=22, font_color=LARANJA, bold=True,
             alignment=PP_ALIGN.CENTER)
 
     add_textbox(slide, 1, 5.2, 11.3, 0.5,
-            'AGENERSA - Agencia Reguladora de Energia e Saneamento do Estado do Rio de Janeiro',
+            'AGENERSA - Agência Reguladora de Energia e Saneamento do Estado do Rio de Janeiro',
             font_size=16, font_color=RGBColor(0x90, 0xCA, 0xF9), bold=False,
             alignment=PP_ALIGN.CENTER)
 
@@ -266,21 +266,21 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Objetivo do Exercicio',
-              'O que faremos neste curso pratico')
+    add_title_bar(slide, 'Objetivo do Exercício',
+              'O que faremos neste curso prático')
 
     add_textbox(slide, 0.8, 1.7, 6, 0.5,
-            'Reproduzir a analise de dados reais de um distrito de gas usando Python + AI',
+            'Reproduzir a análise de dados reais de um distrito de gás usando Python + AI',
             font_size=18, font_color=CINZA_ESCURO, bold=True)
 
     items_obj = [
-    'Ler e explorar dados de uma planilha Excel real de operacao',
+    'Ler e explorar dados de uma planilha Excel real de operação',
     'Analisar volumes de entrada (Concessionaria vs Transportadora)',
-    'Avaliar o Poder Calorifico Superior (PCS) do gas',
-    'Calcular a energia diaria (Volume x PCS)',
-    'Tracar perfis de consumo dos 7 clientes do distrito',
-    'Calcular incertezas de medicao combinadas (metodo RSS)',
-    'Realizar o balanco de massa com bandas de incerteza',
+    'Avaliar o Poder Calorífico Superior (PCS) do gás',
+    'Calcular a energia diária (Volume x PCS)',
+    'Traçar perfis de consumo dos 7 clientes do distrito',
+    'Calcular incertezas de medição combinadas (método RSS)',
+    'Realizar o balanço de massa com bandas de incerteza',
     ]
     add_bullet_list(slide, 0.8, 2.4, 6.5, 4, items_obj, font_size=16)
 
@@ -295,16 +295,16 @@ def gerar_apresentacao():
     shape.shadow.inherit = False
 
     add_textbox(slide, 8.3, 1.9, 4.2, 0.4,
-            'Dados Disponiveis', font_size=18, font_color=AZUL_ESCURO, bold=True)
+            'Dados Disponíveis', font_size=18, font_color=AZUL_ESCURO, bold=True)
 
     dados_items = [
-    '1 distrito de distribuicao de gas',
+    '1 distrito de distribuição de gás',
     '7 clientes (pontos de saida)',
     '6 meses de dados (abr-set/2025)',
-    '183 dias de dados diarios de entrada',
-    '~4.400 registros horarios por cliente',
-    'Dados de volume, pressao, temperatura',
-    'PCS e energia diarios',
+    '183 dias de dados diários de entrada',
+    '~4.400 registros horários por cliente',
+    'Dados de volume, pressão, temperatura',
+    'PCS e energia diários',
     ]
     add_bullet_list(slide, 8.3, 2.5, 4.2, 3.5, dados_items, font_size=14,
                 font_color=AZUL_ESCURO)
@@ -320,18 +320,18 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 1: Leitura e Exploracao dos Dados',
+    add_title_bar(slide, 'Etapa 1: Leitura e Exploração dos Dados',
               'Notebook 01 - Entendendo a estrutura da planilha Excel')
 
     table_data = [
-    ['Aba', 'Conteudo', 'Tipo', 'Registros'],
-    ['Vol Entrada Gas', 'Volumes diarios de entrada', 'Diario', '183 dias'],
-    ['PCS Ent', 'Poder Calorifico Superior', 'Diario', '183 dias'],
+    ['Aba', 'Conteúdo', 'Tipo', 'Registros'],
+    ['Vol Entrada Gas', 'Volumes diários de entrada', 'Diario', '183 dias'],
+    ['PCS Ent', 'Poder Calorífico Superior', 'Diario', '183 dias'],
     ['Energia Ent', 'Energia = Vol x PCS', 'Diario', '183 dias'],
-    ['Cliente #1 a #7', 'Vol, Pressao, Temperatura', 'Horario', '~4.400/cliente'],
-    ['Sumario das Medicoes', 'Resumo de condicoes', 'Consolidado', '-'],
+    ['Cliente #1 a #7', 'Vol, Pressão, Temperatura', 'Horario', '~4.400/cliente'],
+    ['Sumario das Medicoes', 'Resumo de condições', 'Consolidado', '-'],
     ['Incertezas', 'Incerteza por medidor', 'Consolidado', '-'],
-    ['Balanco', 'Entrada vs Saidas', 'Consolidado', '-'],
+    ['Balanço', 'Entrada vs Saídas', 'Consolidado', '-'],
     ]
 
     rows = len(table_data)
@@ -382,7 +382,7 @@ def gerar_apresentacao():
             'Cuidados na leitura:', font_size=14, font_color=VERMELHO, bold=True)
 
     cuidados = [
-    'Nomes de abas com espacos no final',
+    'Nomes de abas com espaços no final',
     'Colunas vazias (deslocamento)',
     'Clientes sem dados (Cliente #4)',
     'header=1 ou header=2 conforme aba',
@@ -396,18 +396,18 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 2: Analise de Volumes de Entrada',
+    add_title_bar(slide, 'Etapa 2: Análise de Volumes de Entrada',
               'Notebook 02 - Comparando Concessionaria vs Transportadora')
 
     add_formula_box(slide, 0.8, 1.7, 5.5, 0.7,
-                'Diferenca (%) = (Vol_Conc - Vol_Transp) / Vol_Conc x 100',
+                'Diferença (%) = (Vol_Conc - Vol_Transp) / Vol_Conc x 100',
                 font_size=16)
 
     items_vol = [
-    'Serie temporal de 183 dias (abril a setembro 2025)',
-    'Volume medio diario: ~996.000 Nm3/dia',
-    'Diferencas entre medicoes < 0,01%',
-    'Dados consistentes entre Concessionaria e Transportadora',
+    'Série temporal de 183 dias (abril a setembro 2025)',
+    'Volume médio diário: ~996.000 Nm³/dia',
+    'Diferenças entre medições < 0,01%',
+    'Dados consistentes entre Concessionária e Transportadora',
     ]
     add_bullet_list(slide, 0.8, 2.6, 5.5, 2, items_vol, font_size=14)
 
@@ -430,8 +430,8 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 3: Analise do Poder Calorifico Superior (PCS)',
-              'Notebook 03 - Qualidade do gas ao longo do tempo')
+    add_title_bar(slide, 'Etapa 3: Análise do Poder Calorífico Superior (PCS)',
+              'Notebook 03 - Qualidade do gás ao longo do tempo')
 
     shape = slide.shapes.add_shape(
     MSO_SHAPE.ROUNDED_RECTANGLE,
@@ -444,23 +444,23 @@ def gerar_apresentacao():
     shape.shadow.inherit = False
 
     add_textbox(slide, 1.0, 1.8, 5, 0.3,
-            'PCS = Poder Calorifico Superior', font_size=16,
+            'PCS = Poder Calorífico Superior', font_size=16,
             font_color=VERDE, bold=True)
     add_textbox(slide, 1.0, 2.1, 5, 0.7,
-            'Energia total por m3 de gas (kcal/m3).\n'
-            'Depende da composicao (cromatografia).',
+            'Energia total por m³ de gás (kcal/m³).\n'
+            'Depende da composição (cromatografia).',
             font_size=13, font_color=CINZA_ESCURO)
 
     items_pcs = [
-    'PCS medio: ~9.539 kcal/m3',
-    'Variacao: 9.168 a 9.786 kcal/m3',
-    'Medicoes Conc vs Transp: dif < 0,01%',
-    'Composicao varia ao longo do tempo',
+    'PCS médio: ~9.539 kcal/m³',
+    'Variação: 9.168 a 9.786 kcal/m³',
+    'Medições Conc vs Transp: dif < 0,01%',
+    'Composição varia ao longo do tempo',
     ]
     add_bullet_list(slide, 0.8, 3.1, 5.5, 2, items_pcs, font_size=14)
 
     add_result_box(slide, 0.8, 5.0, 2.5, 0.9,
-               'PCS Medio', '9.539 kcal/m3', VERDE)
+               'PCS Médio', '9.539 kcal/m3', VERDE)
     add_result_box(slide, 3.6, 5.0, 1.2, 0.9,
                'Min', '9.168', RGBColor(0x66, 0xBB, 0x6A))
     add_result_box(slide, 5.0, 5.0, 1.2, 0.9,
@@ -475,7 +475,7 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 4: Calculo de Energia',
+    add_title_bar(slide, 'Etapa 4: Cálculo de Energia',
               'Notebook 04 - Energia = Volume x PCS')
 
     add_formula_box(slide, 0.8, 1.7, 5.5, 0.8,
@@ -484,21 +484,21 @@ def gerar_apresentacao():
                 font_size=15)
 
     items_en = [
-    'Energia diaria calculada para 183 dias',
-    'Validacao: valores conferem com planilha (dif ~ 0%)',
-    'Energia media diaria: ~9.536 Gcal/dia',
-    'Relacao volume-energia quase linear (r > 0.999)',
+    'Energia diária calculada para 183 dias',
+    'Validação: valores conferem com planilha (dif ~ 0%)',
+    'Energia média diária: ~9.536 Gcal/dia',
+    'Relação volume-energia quase linear (r > 0.999)',
     ]
     add_bullet_list(slide, 0.8, 2.8, 5.5, 2, items_en, font_size=14)
 
     add_result_box(slide, 0.8, 4.7, 2.5, 1.0,
-               'Energia Media', '~9.536 Gcal/d', ROXO)
+               'Energia Média', '~9.536 Gcal/d', ROXO)
     add_result_box(slide, 3.6, 4.7, 2.5, 1.0,
-               'Validacao Planilha', 'Dif ~ 0%', VERDE)
+               'Validação Planilha', 'Dif ~ 0%', VERDE)
 
     add_code_block(slide, 0.8, 5.9, 5.5, 1.0,
                "df['Energia'] = df['Volume_Nm3d'] * df['PCS']\n"
-               "# Verificacao: diferenca ~ 0% vs planilha",
+               "# Verificação: diferença ~ 0% vs planilha",
                font_size=11)
 
     # Grafico
@@ -511,7 +511,7 @@ def gerar_apresentacao():
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
     add_title_bar(slide, 'Etapa 5: Perfis de Consumo dos Clientes',
-              'Notebook 05 - 7 clientes, 7 padroes de consumo')
+              'Notebook 05 - 7 clientes, 7 padrões de consumo')
 
     # Tabela compacta
     client_data = [
@@ -563,7 +563,7 @@ def gerar_apresentacao():
     'Empresa A domina (57,5%)',
     'Top 2 = 81,6% do volume',
     'Empresa D = 0,05% (GNV)',
-    'Fator de carga revela padrao',
+    'Fator de carga revela padrão',
     ]
     add_bullet_list(slide, 0.8, 5.4, 5.5, 1.5, insights, font_size=13)
 
@@ -576,8 +576,8 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 6: Calculo de Incertezas de Medicao',
-              'Notebook 06 - Metodo RSS (Root Sum of Squares)')
+    add_title_bar(slide, 'Etapa 6: Cálculo de Incertezas de Medição',
+              'Notebook 06 - Método RSS (Root Sum of Squares)')
 
     add_formula_box(slide, 0.8, 1.7, 5.5, 0.7,
                 'U_combinada = sqrt( u1^2 + u2^2 + ... + un^2 )',
@@ -615,15 +615,15 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Etapa 7: Balanco de Massa com Incertezas',
-              'Notebook 07 - A diferenca e aceitavel?')
+    add_title_bar(slide, 'Etapa 7: Balanço de Massa com Incertezas',
+              'Notebook 07 - A diferença é aceitável?')
 
     add_formula_box(slide, 0.8, 1.7, 5.5, 0.6,
                 'Dif (%) = (Entrada - Soma_Saidas) / Entrada x 100',
                 font_size=15)
 
     add_textbox(slide, 0.8, 2.5, 5.5, 0.3,
-            'Bandas de variacao:', font_size=15,
+            'Bandas de variação:', font_size=15,
             font_color=AZUL_ESCURO, bold=True)
 
     add_formula_box(slide, 0.8, 2.9, 5.5, 0.5,
@@ -631,20 +631,20 @@ def gerar_apresentacao():
                 font_size=14)
 
     items_bal = [
-    'Se bandas se sobrepoem -> diferenca explicada pela incerteza',
-    'Se NAO -> perda real ou problema no sistema',
+    'Se bandas se sobrepõem → diferença explicada pela incerteza',
+    'Se NÃO → perda real ou problema no sistema',
     ]
     add_bullet_list(slide, 0.8, 3.6, 5.5, 0.8, items_bal, font_size=13)
 
     add_textbox(slide, 0.8, 4.5, 5.5, 1.5,
             'Entrada: 182,9 Mm3  [180,1 - 185,7 Mm3]  (+/- 1,52%)\n'
             'Saidas:  180,9 Mm3  [169,7 - 192,1 Mm3]  (+/- 6,19%)\n'
-            'Sobreposicao: SIM -> Balanco ACEITAVEL',
+            'Sobreposição: SIM → Balanço ACEITÁVEL',
             font_size=13, font_color=CINZA_ESCURO)
 
     add_result_box(slide, 0.8, 5.9, 1.7, 0.9, 'Entrada', '182,9 Mm3', AZUL_MEDIO)
     add_result_box(slide, 2.7, 5.9, 1.7, 0.9, 'Saidas', '180,9 Mm3', LARANJA)
-    add_result_box(slide, 4.6, 5.9, 1.7, 0.9, 'Diferenca', '1,09%', VERDE)
+    add_result_box(slide, 4.6, 5.9, 1.7, 0.9, 'Diferença', '1,09%', VERDE)
 
     # Grafico waterfall
     add_image(slide, 6.8, 1.7, 6.2, 'balanco_waterfall.png')
@@ -656,12 +656,12 @@ def gerar_apresentacao():
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
     add_title_bar(slide, 'Resultado Final - Dashboard',
-              'Visao consolidada do balanco de massa do distrito')
+              'Visão consolidada do balanço de massa do distrito')
 
     # Cards de resultado no topo
     add_result_box(slide, 0.8, 1.7, 2.8, 1.3, 'Volume Entrada', '182,9 Mm3', AZUL_MEDIO)
     add_result_box(slide, 3.9, 1.7, 2.8, 1.3, 'Volume Saida', '180,9 Mm3', LARANJA)
-    add_result_box(slide, 7.0, 1.7, 2.0, 1.3, 'Diferenca', '1,09%', VERDE)
+    add_result_box(slide, 7.0, 1.7, 2.0, 1.3, 'Diferença', '1,09%', VERDE)
     add_result_box(slide, 9.3, 1.7, 2.0, 1.3, 'U Entrada', '1,52%', AZUL_MEDIO)
     add_result_box(slide, 11.6, 1.7, 1.5, 1.3, 'Resultado', 'OK', VERDE)
 
@@ -670,7 +670,7 @@ def gerar_apresentacao():
 
     # Participacao dos clientes
     add_textbox(slide, 7.8, 3.3, 5, 0.4,
-            'Participacao no Distrito', font_size=16,
+            'Participação no Distrito', font_size=16,
             font_color=AZUL_ESCURO, bold=True)
 
     clientes_pct = [
@@ -685,7 +685,7 @@ def gerar_apresentacao():
     add_bullet_list(slide, 7.8, 3.8, 5, 3, clientes_pct, font_size=13)
 
     add_textbox(slide, 7.8, 6.5, 5, 0.5,
-            'Bandas se sobrepoem -> balanco ACEITAVEL',
+            'Bandas se sobrepõem → balanço ACEITÁVEL',
             font_size=14, font_color=VERDE, bold=True)
 
 
@@ -694,8 +694,8 @@ def gerar_apresentacao():
     # ============================================================
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
-    add_title_bar(slide, 'Conclusoes e Licoes Aprendidas',
-              'O que aprendemos com este exercicio')
+    add_title_bar(slide, 'Conclusões e Lições Aprendidas',
+              'O que aprendemos com este exercício')
 
     # Citacao destaque
     shape = slide.shapes.add_shape(
@@ -709,20 +709,20 @@ def gerar_apresentacao():
     shape.shadow.inherit = False
 
     add_textbox(slide, 2, 1.85, 9.3, 0.9,
-            '"Voce fatura o que mede e nao o que produz!"',
+            '"Você fatura o que mede e não o que produz!"',
             font_size=26, font_color=LARANJA, bold=True,
             alignment=PP_ALIGN.CENTER)
 
     add_textbox(slide, 0.8, 3.3, 6, 0.4,
-            'Conclusoes Tecnicas:', font_size=18, font_color=AZUL_ESCURO, bold=True)
+            'Conclusões Técnicas:', font_size=18, font_color=AZUL_ESCURO, bold=True)
 
     conclusoes = [
-    'Balanco de massa e essencial para gestao de distritos',
-    'Incertezas definem se diferencas sao aceitaveis',
-    'Metodo RSS (GUM 2008) e o padrao para combinar incertezas',
-    'Diferenca de ~1% esta dentro das bandas -> balanco aceitavel',
-    'PCS afeta diretamente o valor energetico e comercial',
-    'Medidores com alta incerteza impactam todo o balanco',
+    'Balanço de massa é essencial para gestão de distritos',
+    'Incertezas definem se diferenças são aceitáveis',
+    'Método RSS (GUM 2008) é o padrão para combinar incertezas',
+    'Diferença de ~1% está dentro das bandas → balanço aceitável',
+    'PCS afeta diretamente o valor energético e comercial',
+    'Medidores com alta incerteza impactam todo o balanço',
     ]
     add_bullet_list(slide, 0.8, 3.8, 6.5, 3, conclusoes, font_size=15)
 
@@ -730,12 +730,12 @@ def gerar_apresentacao():
             'Sobre o uso de Python + AI:', font_size=18, font_color=ROXO, bold=True)
 
     ai_items = [
-    'Python permite reproduzir analises de forma transparente',
+    'Python permite reproduzir análises de forma transparente',
     'Notebooks documentam cada etapa do processo',
-    'AI acelera a escrita de codigo e identifica erros',
-    'Validacao cruzada com planilha garante confiabilidade',
-    'Graficos automaticos facilitam a interpretacao',
-    'Codigo pode ser reutilizado para outros distritos',
+    'AI acelera a escrita de código e identifica erros',
+    'Validação cruzada com planilha garante confiabilidade',
+    'Gráficos automáticos facilitam a interpretação',
+    'Código pode ser reutilizado para outros distritos',
     ]
     add_bullet_list(slide, 8, 3.8, 4.8, 3, ai_items, font_size=15,
                 font_color=CINZA_ESCURO)
@@ -747,16 +747,16 @@ def gerar_apresentacao():
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, BRANCO)
     add_title_bar(slide, 'Estrutura dos Notebooks',
-              'Roteiro completo para reproducao da analise')
+              'Roteiro completo para reprodução da análise')
 
     notebooks = [
-    ('01', 'Leitura e Exploracao', 'Ler Excel, mapear abas, tipos de dados', AZUL_MEDIO),
-    ('02', 'Volumes de Entrada', 'Serie temporal, diferencas Conc vs Transp', AZUL_MEDIO),
-    ('03', 'Analise do PCS', 'PCS diario, media movel, distribuicao', VERDE),
-    ('04', 'Calculo de Energia', 'Energia = Vol x PCS, verificacao', ROXO),
-    ('05', 'Perfis dos Clientes', 'Consumo horario, participacao, heatmap', LARANJA),
-    ('06', 'Incertezas de Medicao', 'RSS, limites regulamentares', VERMELHO),
-    ('07', 'Balanco de Massa', 'Entrada vs Saidas, bandas, waterfall', RGBColor(0x00, 0x96, 0x88)),
+    ('01', 'Leitura e Exploração', 'Ler Excel, mapear abas, tipos de dados', AZUL_MEDIO),
+    ('02', 'Volumes de Entrada', 'Série temporal, diferenças Conc vs Transp', AZUL_MEDIO),
+    ('03', 'Análise do PCS', 'PCS diário, média móvel, distribuição', VERDE),
+    ('04', 'Cálculo de Energia', 'Energia = Vol x PCS, verificação', ROXO),
+    ('05', 'Perfis dos Clientes', 'Consumo horário, participação, heatmap', LARANJA),
+    ('06', 'Incertezas de Medição', 'RSS, limites regulamentares', VERMELHO),
+    ('07', 'Balanço de Massa', 'Entrada vs Saídas, bandas, waterfall', RGBColor(0x00, 0x96, 0x88)),
     ]
 
     y_pos = 1.7
@@ -830,7 +830,7 @@ def gerar_apresentacao():
             alignment=PP_ALIGN.CENTER)
 
     add_textbox(slide, 1, 3.2, 11.3, 0.8,
-            'Curso ABAR - Medicoes Inteligentes e Gestao Integrada',
+            'Curso ABAR - Medições Inteligentes e Gestão Integrada',
             font_size=22, font_color=LARANJA, bold=False,
             alignment=PP_ALIGN.CENTER)
 
@@ -844,13 +844,13 @@ def gerar_apresentacao():
     div.shadow.inherit = False
 
     add_textbox(slide, 1, 4.6, 11.3, 0.8,
-            'Analise reproduzida com Python + Claude AI\n'
-            'Todos os notebooks e dados estao disponiveis para pratica',
+            'Análise reproduzida com Python + Claude AI\n'
+            'Todos os notebooks e dados estão disponíveis para prática',
             font_size=18, font_color=AZUL_CLARO, bold=False,
             alignment=PP_ALIGN.CENTER)
 
     add_textbox(slide, 1, 5.8, 11.3, 0.5,
-            'AGENERSA - Agencia Reguladora de Energia e Saneamento do Estado do Rio de Janeiro',
+            'AGENERSA - Agência Reguladora de Energia e Saneamento do Estado do Rio de Janeiro',
             font_size=14, font_color=RGBColor(0x78, 0x78, 0x78), bold=False,
             alignment=PP_ALIGN.CENTER)
 

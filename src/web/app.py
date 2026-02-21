@@ -39,15 +39,9 @@ if IS_VERCEL:
     for d in [DATA_DIR, GRAFICOS_DIR, REPORTS_DIR, PRESENT_DIR, CACHE_DIR]:
         d.mkdir(parents=True, exist_ok=True)
 
-# Serve output files (graphs, diagrams, reports, presentations)
-if GRAFICOS_DIR.exists():
-    app.mount("/files/graficos", StaticFiles(directory=str(GRAFICOS_DIR)), name="graficos")
+# Serve bundled read-only files via StaticFiles (diagramas are in repo, not /tmp)
 if DIAGRAMAS_DIR.exists():
     app.mount("/files/diagramas", StaticFiles(directory=str(DIAGRAMAS_DIR)), name="diagramas")
-if REPORTS_DIR.exists():
-    app.mount("/files/reports", StaticFiles(directory=str(REPORTS_DIR)), name="reports")
-if PRESENT_DIR.exists():
-    app.mount("/files/presentations", StaticFiles(directory=str(PRESENT_DIR)), name="presentations")
 
 # Templates
 templates = Jinja2Templates(directory=str(WEB_DIR / "templates"))
@@ -164,6 +158,36 @@ async def pipeline_cancel():
     runner = get_runner()
     runner.cancel()
     return {"status": "cancelled"}
+
+
+# ---------------------------------------------------------------------------
+# Dynamic file serving (graphs, reports, presentations live in /tmp on Vercel)
+# ---------------------------------------------------------------------------
+@app.get("/files/graficos/{filename}")
+async def serve_grafico(filename: str):
+    """Serve a generated graph PNG."""
+    fpath = GRAFICOS_DIR / filename
+    if not fpath.exists():
+        raise HTTPException(404, f"Gráfico {filename} não encontrado")
+    return FileResponse(fpath, media_type="image/png")
+
+
+@app.get("/files/reports/{filename}")
+async def serve_report(filename: str):
+    """Serve a generated DOCX report."""
+    fpath = REPORTS_DIR / filename
+    if not fpath.exists():
+        raise HTTPException(404, f"Relatório {filename} não encontrado")
+    return FileResponse(fpath)
+
+
+@app.get("/files/presentations/{filename}")
+async def serve_presentation(filename: str):
+    """Serve a generated PPTX presentation."""
+    fpath = PRESENT_DIR / filename
+    if not fpath.exists():
+        raise HTTPException(404, f"Apresentação {filename} não encontrado")
+    return FileResponse(fpath)
 
 
 # ---------------------------------------------------------------------------

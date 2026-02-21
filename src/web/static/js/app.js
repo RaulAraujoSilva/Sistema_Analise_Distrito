@@ -212,6 +212,13 @@ function connectSSE() {
         btnStart.disabled = false;
         btnCancel.classList.add('hidden');
         btnStart.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar Pipeline';
+
+        // Invalidate all caches so galleries refresh with new content
+        graficosData = null;
+        textosLoaded = false;
+        downloadsLoaded = false;
+        dataPreviewLoaded = false;
+        diagramasLoaded = false;
     });
 
     evtSource.addEventListener('error', (e) => {
