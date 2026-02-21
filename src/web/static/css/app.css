@@ -124,6 +124,16 @@ a { color: var(--azul-medio); text-decoration: none; }
     opacity: 0.7;
 }
 
+.header-version {
+    font-size: 0.7rem;
+    background: rgba(255, 152, 0, 0.3);
+    color: var(--laranja);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
 .theme-btn {
     background: rgba(255,255,255,0.1);
     border: none;
