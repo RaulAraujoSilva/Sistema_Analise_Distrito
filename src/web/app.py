@@ -8,7 +8,7 @@ SRC_DIR = Path(__file__).resolve().parent.parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from fastapi import FastAPI, UploadFile, File, Request, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -124,8 +124,8 @@ async def upload_excel(file: UploadFile = File(...)):
 # ---------------------------------------------------------------------------
 @app.post("/api/pipeline/start")
 async def pipeline_start(
-    api_key: str = "",
-    mode: str = "gerar",
+    api_key: str = Form(""),
+    mode: str = Form("gerar"),
     file: UploadFile = File(None),
 ):
     """Start the pipeline in background.
