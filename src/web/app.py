@@ -34,8 +34,9 @@ app = FastAPI(title="Auditoria de Distrito de Gás", version="1.0")
 app.mount("/static", StaticFiles(directory=str(WEB_DIR / "static")), name="static")
 
 # On Vercel, create writable output dirs in /tmp at startup
+# Note: DIAGRAMAS_DIR is read-only (bundled in repo), not created here
 if IS_VERCEL:
-    for d in [DATA_DIR, GRAFICOS_DIR, DIAGRAMAS_DIR, REPORTS_DIR, PRESENT_DIR, CACHE_DIR]:
+    for d in [DATA_DIR, GRAFICOS_DIR, REPORTS_DIR, PRESENT_DIR, CACHE_DIR]:
         d.mkdir(parents=True, exist_ok=True)
 
 # Serve output files (graphs, diagrams, reports, presentations)

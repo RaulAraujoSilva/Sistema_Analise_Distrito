@@ -8,8 +8,15 @@ import traceback
 from typing import AsyncGenerator
 
 
-# Step map: all 29 discrete steps with human-readable labels
+# Step map: all discrete steps with human-readable labels
 STEP_MAP = [
+    # Phase 0: Graph generation (6 steps)
+    {"step": "graphs_volumes", "label": "Gráficos — Volumes de Entrada", "phase": 0, "chapter": None},
+    {"step": "graphs_pcs", "label": "Gráficos — Poder Calorífico", "phase": 0, "chapter": None},
+    {"step": "graphs_energia", "label": "Gráficos — Energia", "phase": 0, "chapter": None},
+    {"step": "graphs_clientes", "label": "Gráficos — Perfis de Clientes", "phase": 0, "chapter": None},
+    {"step": "graphs_incertezas", "label": "Gráficos — Incertezas", "phase": 0, "chapter": None},
+    {"step": "graphs_balanco", "label": "Gráficos — Balanço de Massa", "phase": 0, "chapter": None},
     # Phase 1: Chapter generation (26 steps)
     {"step": "cap1_a_conteudo", "label": "Cap. 1 — Conteúdo", "phase": 1, "chapter": 1},
     {"step": "cap1_b_sintese", "label": "Cap. 1 — Síntese", "phase": 1, "chapter": 1},
@@ -46,6 +53,7 @@ STEP_MAP = [
 ]
 
 PHASE_NAMES = {
+    0: "Geração dos Gráficos",
     1: "Geração dos Capítulos",
     2: "Conclusões e Recomendações",
     3: "Resumo Executivo",

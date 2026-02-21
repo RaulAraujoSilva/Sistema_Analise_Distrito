@@ -42,8 +42,9 @@ from docx_builder import AuditReportBuilder
 # =====================================================================
 from config import (
     GRAFICOS_DIR, CACHE_DIR, METODOLOGIA_DIR, DIAGRAMAS_DIR,
-    REPORTS_DIR, NOTEBOOKS_DIR, NOTEBOOK_LIST,
+    REPORTS_DIR, NOTEBOOKS_DIR, NOTEBOOK_LIST, DATA_DIR, EXCEL_DEFAULT,
 )
+from graph_generator import gerar_todos_graficos
 
 OUTPUT_DEFAULT = "Relatorio_Auditoria_Distrito.docx"
 
@@ -444,13 +445,42 @@ def run_pipeline(
     logger.info("=" * 60)
 
     CACHE_DIR.mkdir(exist_ok=True)
+    GRAFICOS_DIR.mkdir(parents=True, exist_ok=True)
 
     met_files = list(METODOLOGIA_DIR.glob("*.md")) if METODOLOGIA_DIR.exists() else []
     logger.info(f"  Metodologia: {len(met_files)} arquivos")
-    logger.info(f"  Gráficos: {len(list(GRAFICOS_DIR.glob('*.png')))} PNGs")
     logger.info(f"  Diagramas: {len(list(DIAGRAMAS_DIR.glob('*.png')))} PNGs")
     logger.info(f"  Cache: {CACHE_DIR}")
     logger.info(f"  Modo: {'montar' if montar else 'resume' if resume else 'gerar'}")
+
+    # ================================================================
+    # FASE 0: GERAÇÃO DOS GRÁFICOS (a partir do Excel)
+    # ================================================================
+    excel_path = DATA_DIR / EXCEL_DEFAULT
+    if excel_path.exists():
+        logger.info("")
+        logger.info("=" * 60)
+        logger.info("FASE 0: GERAÇÃO DOS GRÁFICOS")
+        logger.info("=" * 60)
+        _emit(on_progress, "phase_start", phase=0, phase_name="Geração dos Gráficos")
+
+        def _graph_progress(info):
+            step_id = f"graphs_{info['group']}"
+            _emit(on_progress, "step_start", step=step_id)
+            _emit(on_progress, "step_complete", step=step_id)
+
+        gerados = gerar_todos_graficos(
+            excel_path=str(excel_path),
+            output_dir=str(GRAFICOS_DIR),
+            on_progress=_graph_progress,
+        )
+        logger.info(f"  Gráficos gerados: {len(gerados)} PNGs")
+        _emit(on_progress, "phase_complete", phase=0)
+    else:
+        logger.warning(f"  Excel não encontrado: {excel_path}")
+        logger.info(f"  Gráficos pré-existentes: {len(list(GRAFICOS_DIR.glob('*.png')))} PNGs")
+
+    logger.info(f"  Gráficos disponíveis: {len(list(GRAFICOS_DIR.glob('*.png')))} PNGs")
 
     client = None
     if not montar:

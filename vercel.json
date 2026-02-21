@@ -10,5 +10,10 @@
       "src": "/(.*)",
       "dest": "src/web/app.py"
     }
-  ]
+  ],
+  "functions": {
+    "src/web/app.py": {
+      "maxDuration": 300
+    }
+  }
 }
