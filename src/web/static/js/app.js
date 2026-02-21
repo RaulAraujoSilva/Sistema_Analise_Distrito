@@ -488,12 +488,13 @@ function renderGraficos(filter) {
         if (filter !== 'all' && String(capNum) !== String(filter)) continue;
         for (const g of capData.graphs) {
             if (!g.exists) continue;
+            const imgSrc = g.data_b64 ? `data:image/png;base64,${g.data_b64}` : g.url;
             const idx = lightboxImages.length;
-            lightboxImages.push({ url: g.url, caption: g.caption });
+            lightboxImages.push({ url: imgSrc, caption: g.caption });
 
             const card = document.createElement('div');
             card.className = 'gallery-card';
-            card.innerHTML = `<img src="${g.url}" alt="${g.caption}" loading="lazy"><div class="caption">${g.caption}</div>`;
+            card.innerHTML = `<img src="${imgSrc}" alt="${g.caption}" loading="lazy"><div class="caption">${g.caption}</div>`;
             card.addEventListener('click', () => openLightbox(idx));
             gallery.appendChild(card);
         }
@@ -696,13 +697,14 @@ async function loadDownloads() {
         data.forEach(f => {
             const iconClass = f.type === 'docx' ? 'docx' : 'pptx';
             const iconText = f.type.toUpperCase();
+            const downloadUrl = f.data_b64 ? `data:${f.mime};base64,${f.data_b64}` : f.url;
             const card = document.createElement('div');
             card.className = 'download-card';
             card.innerHTML = `
                 <div class="download-icon ${iconClass}">${iconText}</div>
                 <h4>${f.filename}</h4>
                 <div class="file-info">${f.size_mb} MB</div>
-                <a href="${f.url}" download class="btn-primary">
+                <a href="${downloadUrl}" download="${f.filename}" class="btn-primary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Baixar
                 </a>

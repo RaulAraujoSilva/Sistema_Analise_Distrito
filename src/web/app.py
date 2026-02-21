@@ -13,6 +13,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, Streamin
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+import base64
 import json
 import os
 import time
@@ -195,18 +196,22 @@ async def serve_presentation(filename: str):
 # ---------------------------------------------------------------------------
 @app.get("/api/outputs/graficos")
 async def list_graficos():
-    """List all graph PNGs organized by chapter."""
+    """List all graph PNGs organized by chapter, with inline base64 data."""
     result = {}
     for cap_num, cfg in CHAPTER_CONFIG.items():
         graphs = []
         for fname in cfg.get("graph_files", []):
             fpath = GRAFICOS_DIR / fname
-            graphs.append({
+            exists = fpath.exists()
+            g = {
                 "filename": fname,
                 "caption": cfg.get("graph_captions", {}).get(fname, fname),
-                "exists": fpath.exists(),
+                "exists": exists,
                 "url": f"/files/graficos/{fname}",
-            })
+            }
+            if exists:
+                g["data_b64"] = base64.b64encode(fpath.read_bytes()).decode()
+            graphs.append(g)
         if graphs:
             result[cap_num] = {
                 "titulo": cfg["titulo"],
@@ -259,18 +264,23 @@ async def get_cache_content(filename: str):
 
 @app.get("/api/outputs/downloads")
 async def list_downloads():
-    """List available download files (DOCX, PPTX)."""
+    """List available download files (DOCX, PPTX) with inline base64 data."""
     files = []
+    mime_map = {"docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation"}
     for directory, ftype in [(REPORTS_DIR, "docx"), (PRESENT_DIR, "pptx")]:
         if directory.exists():
             for f in directory.iterdir():
                 if f.suffix in (".docx", ".pptx"):
-                    files.append({
+                    entry = {
                         "filename": f.name,
                         "type": ftype,
                         "size_mb": round(f.stat().st_size / (1024 * 1024), 2),
                         "url": f"/files/{'reports' if ftype == 'docx' else 'presentations'}/{f.name}",
-                    })
+                        "mime": mime_map[ftype],
+                        "data_b64": base64.b64encode(f.read_bytes()).decode(),
+                    }
+                    files.append(entry)
     return files
 
 
