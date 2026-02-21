@@ -1,0 +1,107 @@
+[
+  {
+    "nome": "Equação de Bernoulli (Fluxo Ideal)",
+    "latex": "P_1 + \\frac{1}{2}\\rho v_1^2 + \\rho g h_1 = P_2 + \\frac{1}{2}\\rho v_2^2 + \\rho g h_2",
+    "descricao": "Descreve a conservação de energia para um fluido ideal em escoamento, relacionando pressão, velocidade e altura."
+  },
+  {
+    "nome": "Número de Reynolds",
+    "latex": "Re = \\frac{\\text{Forças Inerciais}}{\\text{Forças Viscosas}} = \\frac{\\rho v D}{\\mu}",
+    "descricao": "Grandeza adimensional utilizada para prever os padrões de escoamento de um fluido (laminar ou turbulento)."
+  },
+  {
+    "nome": "Vazão Volumétrica Não Corrigida",
+    "latex": "Q_{\\text{Não Corrigida}} = v \\cdot A",
+    "descricao": "Cálculo da vazão volumétrica nas condições de operação, baseada na velocidade do fluido e área da seção transversal."
+  },
+  {
+    "nome": "Vazão Volumétrica Corrigida",
+    "latex": "Q_{\\text{corrigida}} = Q_{\\text{Não Corrigida}} \\cdot \\frac{\\rho_{\\text{cond. operação}}}{\\rho_{\\text{cond. referência}}}",
+    "descricao": "Converte a vazão volumétrica das condições de operação para as condições de referência (base)."
+  },
+  {
+    "nome": "Vazão Mássica",
+    "latex": "Q_m = \\rho \\cdot Q_v = \\rho \\cdot v \\cdot A",
+    "descricao": "Cálculo da vazão mássica, que independe das condições de pressão e temperatura."
+  },
+  {
+    "nome": "Cálculo do Volume Corrigido (Fatores PTZ)",
+    "latex": "FC_{PTZ} = V_{operação} \\times FC_P \\times FC_T \\times FC_Z \\times F_M",
+    "descricao": "Cálculo do volume corrigido aplicando fatores de conversão de pressão (FCp), temperatura (FCt), compressibilidade (FCz) e correção do medidor (Fm)."
+  },
+  {
+    "nome": "Erro Médio Ponderado (EMP)",
+    "latex": "EMP = \\frac{\\sum_{i=1}^{n} k_i E_i}{\\sum_{i=1}^{n} k_i}",
+    "descricao": "Cálculo do erro médio ponderado de um medidor de vazão considerando fatores de ponderação baseados na vazão."
+  },
+  {
+    "nome": "Fator de Ponderação (k) para EMP",
+    "latex": "k_i = \\frac{Q_i}{Q_{max}} \\quad \\text{para } Q_i \\le 0,7 Q_{max}; \\quad k_i = 1,4 - \\frac{Q_i}{Q_{max}} \\quad \\text{para } 0,7 Q_{max} < Q_i \\le Q_{max}",
+    "descricao": "Determinação dos pesos para o cálculo do Erro Médio Ponderado em função da vazão."
+  },
+  {
+    "nome": "Velocidade Ultrassom (Efeito Doppler)",
+    "latex": "V = \\frac{V_s \\cdot \\Delta f}{f_0 \\cdot \\cos \\phi}",
+    "descricao": "Inferência da velocidade do escoamento baseada na variação de frequência (Efeito Doppler) em medidores ultrassônicos."
+  },
+  {
+    "nome": "Correção do Diâmetro do Orifício (Temperatura)",
+    "latex": "d = d_0 \\cdot [1 + \\alpha_{orifício}(T_{operação} - T_{referência})]",
+    "descricao": "Corrige o diâmetro da placa de orifício devido à dilatação térmica na temperatura de operação."
+  },
+  {
+    "nome": "Correção do Diâmetro da Tubulação (Temperatura)",
+    "latex": "D = D_0 \\cdot [1 + \\alpha_{tubulação}(T_{operação} - T_{referência})]",
+    "descricao": "Corrige o diâmetro interno da tubulação devido à dilatação térmica na temperatura de operação."
+  },
+  {
+    "nome": "Razão Beta",
+    "latex": "\\beta = \\frac{d}{D}",
+    "descricao": "Razão entre o diâmetro do orifício da placa e o diâmetro interno da tubulação."
+  },
+  {
+    "nome": "Vazão Mássica (Placa de Orifício)",
+    "latex": "Q_m = \\frac{C_d}{\\sqrt{1-\\beta^4}} \\varepsilon \\frac{\\pi}{4} d^2 \\sqrt{2\\Delta P \\rho}",
+    "descricao": "Equação fundamental para cálculo de vazão mássica em medidores de pressão diferencial (Placa de Orifício)."
+  },
+  {
+    "nome": "Poder Calorífico da Amostra",
+    "latex": "\\text{Poder Calorífico}_{amostra} = \\frac{\\sum_{i=1}^{n} x_i \\cdot H_i}{Z}",
+    "descricao": "Cálculo do poder calorífico do gás natural baseado na composição molar (xi) e poder calorífico individual (Hi) dos componentes."
+  },
+  {
+    "nome": "Densidade Relativa da Amostra",
+    "latex": "\\text{Densidade Relativa}_{amostra} = \\sum_{i=1}^{n} x_i \\cdot G_i \\cdot \\frac{Z_{ar}}{Z}",
+    "descricao": "Cálculo da densidade relativa do gás baseada na composição e fatores de compressibilidade."
+  },
+  {
+    "nome": "Estimativa de Incerteza Combinada (RSS)",
+    "latex": "E = \\pm \\sqrt{E_{x1}^2 + E_{x2}^2 + E_{x3}^2 + \\dots + E_{xn}^2}",
+    "descricao": "Regra básica para combinação de incertezas independentes (Raiz da Soma dos Quadrados)."
+  },
+  {
+    "nome": "Incerteza na Medição de Pressão",
+    "latex": "E_{pressão} = \\pm \\sqrt{E_{transmissor}^2 + E_{temp\\ amb}^2 + E_{deriva}^2 + E_{conv\\ AD}^2 + E_{pressão\\ atm}^2 + E_{calibração}^2 + E_{alim\\ elétr}^2}",
+    "descricao": "Estimativa da incerteza combinada para um sistema de medição de pressão."
+  },
+  {
+    "nome": "Incerteza na Medição de Temperatura",
+    "latex": "E_{temperatura} = \\pm \\sqrt{E_{transmissor}^2 + E_{sensor}^2 + E_{temp\\ amb}^2 + E_{deriva}^2 + E_{conv\\ AD}^2 + E_{resist\\ cabo}^2 + E_{calibração}^2 + E_{cond\\ térm\\ poço}^2}",
+    "descricao": "Estimativa da incerteza combinada para um sistema de medição de temperatura."
+  },
+  {
+    "nome": "Incerteza na Medição de Vazão com Placa de Orifício",
+    "latex": "E = \\pm \\sqrt{E_{temp}^2 + E_{pressão}^2 + E_{dP}^2 + E_{D}^2 + E_{d}^2 + E_{\\beta}^2 + E_{exp}^2 + E_{Cd}^2 + E_{\\rho}^2}",
+    "descricao": "Estimativa da incerteza combinada para medição de vazão utilizando placa de orifício, considerando incertezas das variáveis de entrada."
+  },
+  {
+    "nome": "Incerteza na Medição com Turbina",
+    "latex": "E_{medidor} = \\pm \\sqrt{E_{turbina}^2 + E_{pulsos}^2 + E_{temp\\ amb}^2 + E_{deriva}^2 + E_{manutenção}^2 + E_{calibração}^2}",
+    "descricao": "Estimativa da incerteza combinada para um medidor de vazão tipo turbina."
+  },
+  {
+    "nome": "Incerteza de Cromatógrafo",
+    "latex": "E = \\pm \\sqrt{E_{Amostra}^2 + E_{Calibração}^2 + E_{Deriva}^2 + E_{Detector}^2 + E_{Sequenciamento}^2}",
+    "descricao": "Estimativa da incerteza combinada para análise de composição via cromatografia gasosa."
+  }
+]

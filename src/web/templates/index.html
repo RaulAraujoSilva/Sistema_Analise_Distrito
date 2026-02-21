@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoria de Distrito de Gás</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF9800' stroke-width='2'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
+    <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <h1>Auditoria de Distrito de Gás</h1>
+        </div>
+        <div class="header-right">
+            <span class="header-subtitle">Curso ABAR — Análise de Dados</span>
+            <button id="theme-toggle" class="theme-btn" title="Alternar tema">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <a href="#" class="nav-item active" data-section="config">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Configuração</span>
+            </a>
+            <a href="#" class="nav-item" data-section="pipeline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Pipeline</span>
+            </a>
+            <a href="#" class="nav-item" data-section="graficos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 17 3-6 3 6"/><path d="m15 9 3 6"/></svg>
+                <span>Gráficos</span>
+            </a>
+            <a href="#" class="nav-item" data-section="diagramas">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="6" height="10" rx="1"/><rect x="9" y="3" width="6" height="18" rx="1"/><rect x="16" y="10" width="6" height="7" rx="1"/></svg>
+                <span>Diagramas</span>
+            </a>
+            <a href="#" class="nav-item" data-section="textos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                <span>Textos</span>
+            </a>
+            <a href="#" class="nav-item" data-section="downloads">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Downloads</span>
+            </a>
+        </nav>
+
+        <!-- Main content -->
+        <main class="content">
+
+            <!-- ==================== CONFIGURAÇÃO ==================== -->
+            <section id="sec-config" class="section active">
+                <div class="section-header">
+                    <h2>Configuração do Pipeline</h2>
+                    <p class="section-desc">Configure o arquivo de dados e a chave API antes de iniciar a geração.</p>
+                </div>
+
+                <div class="cards-row">
+                    <!-- Upload Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <h3>Arquivo Excel</h3>
+                        </div>
+                        <div class="upload-zone" id="upload-zone">
+                            <input type="file" id="file-input" accept=".xlsx,.xls" hidden>
+                            <div class="upload-content">
+                                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <p>Arraste o arquivo ou <strong>clique para selecionar</strong></p>
+                                <span class="upload-hint">.xlsx ou .xls</span>
+                            </div>
+                        </div>
+                        <div id="upload-status" class="status-box hidden">
+                            <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span id="upload-status-text"></span>
+                        </div>
+                    </div>
+
+                    <!-- API Key Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            <h3>Chave API Gemini</h3>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="api-key-input" placeholder="AIza..." class="form-input">
+                            <button id="toggle-key-btn" class="btn-icon" title="Mostrar/ocultar chave">
+                                <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <div id="key-status" class="status-box hidden">
+                            <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span>Chave configurada</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mode selector + Start button -->
+                <div class="card start-card">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <h3>Modo de Execução</h3>
+                    </div>
+                    <div class="mode-selector">
+                        <label class="mode-option">
+                            <input type="radio" name="mode" value="gerar" checked>
+                            <div class="mode-card">
+                                <strong>Gerar Completo</strong>
+                                <span>28 chamadas API (~15 min)</span>
+                            </div>
+                        </label>
+                        <label class="mode-option">
+                            <input type="radio" name="mode" value="resume">
+                            <div class="mode-card">
+                                <strong>Retomar</strong>
+                                <span>Usa cache existente, gera faltantes</span>
+                            </div>
+                        </label>
+                        <label class="mode-option">
+                            <input type="radio" name="mode" value="montar">
+                            <div class="mode-card">
+                                <strong>Apenas Montar</strong>
+                                <span>Zero chamadas API (requer cache)</span>
+                            </div>
+                        </label>
+                    </div>
+                    <button id="btn-start" class="btn-primary btn-lg" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Iniciar Pipeline
+                    </button>
+                </div>
+            </section>
+
+            <!-- ==================== PIPELINE ==================== -->
+            <section id="sec-pipeline" class="section">
+                <div class="section-header">
+                    <div class="section-header-row">
+                        <div>
+                            <h2>Execução do Pipeline</h2>
+                            <p class="section-desc" id="pipeline-subtitle">Aguardando início...</p>
+                        </div>
+                        <button id="btn-cancel" class="btn-cancel hidden" title="Cancelar pipeline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Overall progress bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span id="progress-pct">0%</span>
+                        <span id="progress-steps">0/29 etapas</span>
+                        <span id="progress-time">0:00</span>
+                    </div>
+                </div>
+
+                <!-- Phase stepper -->
+                <div class="phase-stepper">
+                    <div class="phase-step" data-phase="1">
+                        <div class="phase-dot"></div>
+                        <div class="phase-line"></div>
+                        <span class="phase-label">Capítulos</span>
+                    </div>
+                    <div class="phase-step" data-phase="2">
+                        <div class="phase-dot"></div>
+                        <div class="phase-line"></div>
+                        <span class="phase-label">Conclusões</span>
+                    </div>
+                    <div class="phase-step" data-phase="3">
+                        <div class="phase-dot"></div>
+                        <div class="phase-line"></div>
+                        <span class="phase-label">Resumo</span>
+                    </div>
+                    <div class="phase-step" data-phase="4">
+                        <div class="phase-dot"></div>
+                        <span class="phase-label">Montagem</span>
+                    </div>
+                </div>
+
+                <!-- Chapter cards grid -->
+                <div class="chapter-grid" id="chapter-grid">
+                    {% for num in range(1, 8) %}
+                    <div class="chapter-card" id="chapter-card-{{ num }}">
+                        <div class="chapter-title">Cap. {{ num }}</div>
+                        <div class="chapter-subtitle">{{ chapter_config[num]["titulo"][:30] }}{% if chapter_config[num]["titulo"]|length > 30 %}...{% endif %}</div>
+                        <div class="substeps">
+                            {% if num == 1 %}
+                            <div class="substep pending" data-step="cap1_a_conteudo" title="Conteúdo">A</div>
+                            <div class="substep pending" data-step="cap1_b_sintese" title="Síntese">B</div>
+                            {% else %}
+                            <div class="substep pending" data-step="cap{{ num }}_a_metodologia" title="Metodologia">A</div>
+                            <div class="substep pending" data-step="cap{{ num }}_b_dados" title="Dados">B</div>
+                            <div class="substep pending" data-step="cap{{ num }}_c_graficos" title="Gráficos">C</div>
+                            <div class="substep pending" data-step="cap{{ num }}_d_sintese" title="Síntese">D</div>
+                            {% endif %}
+                        </div>
+                        <div class="chapter-progress">
+                            <div class="chapter-progress-fill" id="chapter-progress-{{ num }}"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Extra cards for phases 2-4 -->
+                    <div class="chapter-card phase-card" id="card-conclusoes">
+                        <div class="chapter-title">Fase 2</div>
+                        <div class="chapter-subtitle">Conclusões</div>
+                        <div class="substeps">
+                            <div class="substep pending" data-step="conclusoes" title="Conclusões">C</div>
+                        </div>
+                        <div class="chapter-progress"><div class="chapter-progress-fill" id="chapter-progress-conclusoes"></div></div>
+                    </div>
+                    <div class="chapter-card phase-card" id="card-resumo">
+                        <div class="chapter-title">Fase 3</div>
+                        <div class="chapter-subtitle">Resumo Executivo</div>
+                        <div class="substeps">
+                            <div class="substep pending" data-step="resumo_executivo" title="Resumo">R</div>
+                        </div>
+                        <div class="chapter-progress"><div class="chapter-progress-fill" id="chapter-progress-resumo"></div></div>
+                    </div>
+                    <div class="chapter-card phase-card" id="card-docx">
+                        <div class="chapter-title">Fase 4</div>
+                        <div class="chapter-subtitle">Montagem DOCX</div>
+                        <div class="substeps">
+                            <div class="substep pending" data-step="docx_assembly" title="Montagem">D</div>
+                        </div>
+                        <div class="chapter-progress"><div class="chapter-progress-fill" id="chapter-progress-docx"></div></div>
+                    </div>
+                </div>
+
+                <!-- Pipeline log -->
+                <div class="log-container" id="log-container">
+                    <h4>Log de Execução</h4>
+                    <div class="log-entries" id="log-entries"></div>
+                </div>
+            </section>
+
+            <!-- ==================== GRÁFICOS ==================== -->
+            <section id="sec-graficos" class="section">
+                <div class="section-header">
+                    <h2>Gráficos</h2>
+                    <p class="section-desc">23 gráficos gerados pelos notebooks de análise.</p>
+                </div>
+                <div class="tab-bar" id="graficos-tabs">
+                    <button class="tab active" data-cap="all">Todos</button>
+                    {% for num in range(2, 8) %}
+                    <button class="tab" data-cap="{{ num }}">Cap. {{ num }}</button>
+                    {% endfor %}
+                </div>
+                <div class="gallery" id="graficos-gallery">
+                    <div class="gallery-loading">Carregando gráficos...</div>
+                </div>
+            </section>
+
+            <!-- ==================== DIAGRAMAS ==================== -->
+            <section id="sec-diagramas" class="section">
+                <div class="section-header">
+                    <h2>Diagramas</h2>
+                    <p class="section-desc">Diagramas de processo gerados via Gemini Image.</p>
+                </div>
+                <div class="gallery gallery-large" id="diagramas-gallery">
+                    <div class="gallery-loading">Carregando diagramas...</div>
+                </div>
+            </section>
+
+            <!-- ==================== TEXTOS ==================== -->
+            <section id="sec-textos" class="section">
+                <div class="section-header">
+                    <h2>Textos Gerados</h2>
+                    <p class="section-desc">Seções de texto geradas pelo LLM, armazenadas em cache.</p>
+                </div>
+                <div class="accordion" id="textos-accordion">
+                    <div class="accordion-loading">Carregando seções...</div>
+                </div>
+            </section>
+
+            <!-- ==================== DOWNLOADS ==================== -->
+            <section id="sec-downloads" class="section">
+                <div class="section-header">
+                    <h2>Downloads</h2>
+                    <p class="section-desc">Documentos finais gerados pelo pipeline.</p>
+                </div>
+                <div class="download-grid" id="download-grid">
+                    <div class="gallery-loading">Carregando...</div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" hidden>
+        <div class="lightbox-overlay"></div>
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightbox-close">&times;</button>
+            <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&lsaquo;</button>
+            <img id="lightbox-img" src="" alt="">
+            <button class="lightbox-nav lightbox-next" id="lightbox-next">&rsaquo;</button>
+            <p class="lightbox-caption" id="lightbox-caption"></p>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/static/js/markdown-it.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

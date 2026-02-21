@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Excel lock files
+~$*
+
+# Virtual environment
+.venv/
+env/
+
+# Cache de LLM (regeneravel)
+outputs/cache/
+
+# Relatorios gerados (regeneraveis pelo pipeline)
+outputs/reports/archive/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude docs (local)
+.claude-docs/
+
+# Node modules e projetos React embarcados
+node_modules/
+Apresentação Raul/apresentacao-react/

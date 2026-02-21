@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloco 6 - IA Aplicada a Data Science para Reguladores | ABAR</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --abar-azul: #003886;
+  --abar-azul-claro: #0081BF;
+  --abar-branco: #FFFFFF;
+  --abar-cinza: #F0F4F8;
+  --abar-verde: #008A4B;
+  --abar-laranja: #E86D00;
+  --abar-amarelo: #FFD700;
+  --abar-vermelho: #D32F2F;
+  --r-heading-color: var(--abar-azul);
+  --r-link-color: var(--abar-azul-claro);
+  --r-main-font-size: 28px;
+}
+
+.reveal {
+  font-family: 'Inter', 'Calibri', Arial, sans-serif;
+  font-size: var(--r-main-font-size);
+  color: #333;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  font-family: 'Inter', 'Calibri', sans-serif;
+  color: var(--abar-azul);
+  text-transform: none;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.reveal h2 { font-size: 1.6em; margin-bottom: 0.3em; }
+.reveal h3 { font-size: 1.1em; color: var(--abar-azul-claro); margin-bottom: 0.2em; }
+
+/* Header bar on every slide */
+.slide-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(135deg, var(--abar-azul) 0%, var(--abar-azul-claro) 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  z-index: 10;
+}
+.slide-header img {
+  height: 40px;
+  margin-right: 15px;
+}
+.slide-header span {
+  color: white;
+  font-size: 0.55em;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Footer */
+.slide-footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 30px;
+  background: var(--abar-azul);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  font-size: 0.4em;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Content area */
+.slide-content {
+  margin-top: 70px;
+  margin-bottom: 40px;
+  padding: 0 20px;
+  height: calc(100% - 110px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards grid */
+.cards-grid {
+  display: grid;
+  gap: 15px;
+  flex: 1;
+}
+.cards-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.cards-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cards-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.cards-grid.g2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.cards-grid.g2x3 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+
+.card {
+  background: var(--abar-cinza);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: left;
+  border-left: 4px solid var(--abar-azul-claro);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7em;
+}
+.card h4 {
+  color: var(--abar-azul);
+  margin: 0 0 8px 0;
+  font-size: 1.1em;
+}
+.card p, .card ul { margin: 0; font-size: 0.95em; color: #555; }
+.card ul { padding-left: 18px; }
+.card .icon { font-size: 1.8em; margin-bottom: 8px; }
+.card a {
+  display: inline-block;
+  margin-top: auto;
+  padding: 5px 12px;
+  background: var(--abar-azul-claro);
+  color: white !important;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85em;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.card a:hover { background: var(--abar-azul); }
+
+/* Color variants */
+.card.green { border-left-color: var(--abar-verde); }
+.card.green h4 { color: var(--abar-verde); }
+.card.orange { border-left-color: var(--abar-laranja); }
+.card.orange h4 { color: var(--abar-laranja); }
+.card.red { border-left-color: var(--abar-vermelho); }
+.card.red h4 { color: var(--abar-vermelho); }
+
+/* Tables */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.65em;
+  text-align: left;
+}
+.styled-table thead { background: var(--abar-azul); color: white; }
+.styled-table th, .styled-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+}
+.styled-table tbody tr:nth-child(even) { background: var(--abar-cinza); }
+.styled-table tbody tr:hover { background: #e0e8f0; }
+
+/* Image safe */
+.img-safe {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Demo banner */
+.demo-banner {
+  background: linear-gradient(135deg, var(--abar-laranja), #FF8A00);
+  color: white;
+  padding: 8px 25px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 0.7em;
+  display: inline-block;
+  animation: pulse 2s infinite;
+  margin-bottom: 10px;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Stats */
+.stat-box {
+  text-align: center;
+  padding: 15px;
+}
+.stat-number {
+  font-size: 2.5em;
+  font-weight: 800;
+  color: var(--abar-azul);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.6em;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* Code blocks */
+.reveal pre {
+  font-size: 0.55em;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+.terminal {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.55em;
+  text-align: left;
+  white-space: pre-wrap;
+}
+.terminal .prompt { color: #4EC9B0; }
+.terminal .cmd { color: #DCDCAA; }
+.terminal .output { color: #9CDCFE; }
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 10px 0;
+  font-size: 0.6em;
+}
+.timeline-item {
+  text-align: center;
+  padding: 8px 12px;
+  position: relative;
+}
+.timeline-item .year {
+  font-weight: 800;
+  color: var(--abar-azul);
+  font-size: 1.2em;
+}
+.timeline-item .event { color: #666; font-size: 0.9em; }
+.timeline-arrow {
+  font-size: 1.5em;
+  color: var(--abar-azul-claro);
+}
+
+/* Quote */
+blockquote {
+  background: var(--abar-cinza);
+  border-left: 4px solid var(--abar-azul);
+  padding: 15px 20px;
+  margin: 15px 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+/* Capa slide */
+.capa-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(135deg, var(--abar-azul) 0%, var(--abar-azul-claro) 60%, #00a3e0 100%);
+  color: white;
+  padding: 40px;
+}
+.capa-slide img { height: 80px; margin-bottom: 20px; }
+.capa-slide h1 {
+  color: white;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.capa-slide .subtitle {
+  font-size: 0.8em;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+.capa-slide .author {
+  font-size: 0.6em;
+  opacity: 0.8;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  padding-top: 15px;
+  margin-top: auto;
+}
+
+/* Iframe container */
+.iframe-container {
+  flex: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  position: relative;
+}
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.iframe-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--abar-cinza);
+  height: 100%;
+  border-radius: 8px;
+}
+.iframe-fallback a {
+  padding: 12px 30px;
+  background: var(--abar-azul);
+  color: white !important;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+/* Numbered steps */
+.steps { counter-reset: step; padding: 0; list-style: none !important; font-size: 0.7em; }
+.reveal ol.steps { list-style-type: none !important; }
+.steps li {
+  counter-increment: step;
+  padding: 8px 0 8px 40px;
+  position: relative;
+  border-left: 2px solid var(--abar-azul-claro);
+  margin-left: 15px;
+}
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: -14px;
+  width: 26px;
+  height: 26px;
+  background: var(--abar-azul);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+/* Two columns */
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+}
+
+/* Section divider */
+section[data-background-color] h2 {
+  color: white !important;
+  font-size: 2em;
+}
+section[data-background-color] h3 {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* Reveal overrides for readability */
+.reveal .slides section { text-align: left; }
+.reveal .slides section.center-slide { text-align: center; }
+
+/* Image grid for benchmarks */
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+}
+.benchmark-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Link button style */
+.link-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--abar-azul);
+  color: white !important;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.7em;
+  transition: all 0.2s;
+  margin: 3px;
+}
+.link-btn:hover { background: var(--abar-azul-claro); transform: translateY(-2px); }
+.link-btn.green { background: var(--abar-verde); }
+.link-btn.orange { background: var(--abar-laranja); }
+
+/* Print PDF adjustments */
+@media print {
+  .slide-header, .slide-footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: CAPA -->
+<!-- ============================================================ -->
+<section>
+  <div class="capa-slide">
+    <img src="../template_Imagem 10.jpg" alt="Logo ABAR">
+    <h1>Inteligência Artificial Aplicada<br>a Data Science para Reguladores</h1>
+    <div class="subtitle">
+      Bloco 6 &mdash; Curso ABAR: Medições Inteligentes e Gestão Integrada de Dados<br>
+      24 a 27 de fevereiro de 2026
+    </div>
+    <div class="author">
+      <strong>Raul Araújo</strong> &mdash; Especialista em Regulação<br>
+      AGENERSA &mdash; Agência Reguladora de Energia e Saneamento Básico do Estado do Rio de Janeiro
+    </div>
+  </div>
+  <aside class="notes">
+    Boas-vindas. Apresentar-se brevemente. Mencionar que o bloco tem 4 horas.
+    Perguntar quem já usou ChatGPT ou outra IA. Contextualizar o objetivo: mostrar
+    que não-programadores conseguem fazer data science completa com IA.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: A IA EVOLUIU -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Bloco 6 &mdash; IA Aplicada a Data Science</span>
+  </div>
+  <div class="slide-content">
+    <h2>A IA Evoluiu &mdash; e Rápido</h2>
+    <div class="timeline">
+      <div class="timeline-item"><div class="year">2022</div><div class="event">ChatGPT<br>lançado</div></div>
+      <div class="timeline-arrow">&rarr;</div>
+      <div class="timeline-item"><div class="year">2023</div><div class="event">GPT-4<br>multimodal</div></div>
+      <div class="timeline-arrow">&rarr;</div>
+      <div class="timeline-item"><div class="year">2024</div><div class="event">Agentes<br>autônomos</div></div>
+      <div class="timeline-arrow">&rarr;</div>
+      <div class="timeline-item"><div class="year">2025</div><div class="event">IA supera<br>humanos em<br>benchmarks</div></div>
+    </div>
+    <div class="benchmark-grid">
+      <img src="../screenshots/benchmark_humanitys_last_exam_chart.png" alt="Humanity's Last Exam" class="img-safe">
+      <img src="../screenshots/benchmark_swebench.png" alt="SWE-bench" class="img-safe">
+      <img src="../screenshots/benchmark_epoch_ai.png" alt="Epoch AI" class="img-safe">
+      <img src="../screenshots/benchmark_imo_2025.png" alt="IMO 2025" class="img-safe">
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>2 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar como a IA evoluiu exponencialmente. Em 2022 o ChatGPT surpreendeu o mundo.
+    Em apenas 3 anos, modelos ja superam humanos em olimpiadas de matematica (IMO),
+    engenharia de software (SWE-bench) e exames academicos (Humanity's Last Exam).
+    Isso muda fundamentalmente o que e possivel para nao-programadores.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: ROTEIRO -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Bloco 6 &mdash; IA Aplicada a Data Science</span>
+  </div>
+  <div class="slide-content">
+    <h2>Roteiro do Bloco 6</h2>
+    <div class="cards-grid cols-4" style="margin-top: 15px;">
+      <div class="card">
+        <div class="icon">&#x1F916;</div>
+        <h4>Módulo 1</h4>
+        <p><strong>Ferramentas de IA</strong></p>
+        <p>Chatbots, IDEs, CLIs e Agentes &mdash; o ecossistema atual</p>
+        <p style="margin-top:8px; font-size:0.85em; color:#888;">~45 min</p>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x1F4CA;</div>
+        <h4>Módulo 2</h4>
+        <p><strong>Data Science com IA</strong></p>
+        <p>Metodologia IBM, coleta, limpeza e análise de dados</p>
+        <p style="margin-top:8px; font-size:0.85em; color:#888;">~60 min</p>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F680;</div>
+        <h4>Módulo 3</h4>
+        <p><strong>Caso Real AGENERSA</strong></p>
+        <p>Sistema completo: 7 notebooks, relatório e dashboards</p>
+        <p style="margin-top:8px; font-size:0.85em; color:#888;">~60 min</p>
+      </div>
+      <div class="card red">
+        <div class="icon">&#x1F4DD;</div>
+        <h4>Módulo 4</h4>
+        <p><strong>Entrega e Avaliação</strong></p>
+        <p>Deploy, ferramentas complementares e avaliação final</p>
+        <p style="margin-top:8px; font-size:0.85em; color:#888;">~55 min</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>3 / 28</span>
+  </div>
+  <aside class="notes">
+    Visão geral dos 4 modulos. Total ~4 horas. Cada modulo tem demos ao vivo
+    intercaladas com teoria. Módulo 3 e o mais extenso pois mostra o projeto real.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: 4 GRANDES MODELOS (Módulo 1) -->
+<!-- ============================================================ -->
+<section data-background-color="var(--abar-azul)">
+  <h2 style="text-align:center;">Módulo 1: Ferramentas de IA</h2>
+  <h3 style="text-align:center;">Os 4 grandes chatbots, IDEs, CLIs e Agentes</h3>
+  <aside class="notes">Slide de transição para o Módulo 1.</aside>
+</section>
+
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Os 4 Grandes Modelos de IA</h2>
+    <div class="cards-grid g2x2" style="margin-top: 10px;">
+      <div class="card">
+        <div class="icon">&#x1F7E2;</div>
+        <h4>ChatGPT (OpenAI)</h4>
+        <p>GPT-4o, o1, o3 &mdash; O mais popular. Deep Research, Canvas, análise de dados com Code Interpreter.</p>
+        <a href="https://chatgpt.com" target="_blank">Abrir ChatGPT &rarr;</a>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x1F535;</div>
+        <h4>Gemini (Google)</h4>
+        <p>Gemini 2.5 Pro &mdash; Janela de 1M tokens, integração com Google Workspace, Deep Research.</p>
+        <a href="https://gemini.google.com" target="_blank">Abrir Gemini &rarr;</a>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F7E0;</div>
+        <h4>Claude (Anthropic)</h4>
+        <p>Claude Opus 4, Sonnet 4.6 &mdash; Artifacts, análise longa, 200K tokens de contexto.</p>
+        <a href="https://claude.ai" target="_blank">Abrir Claude &rarr;</a>
+      </div>
+      <div class="card red">
+        <div class="icon">&#x26AB;</div>
+        <h4>Grok (xAI)</h4>
+        <p>Grok 3 &mdash; Integrado ao X/Twitter, busca em tempo real, geração de imagens.</p>
+        <a href="https://grok.com" target="_blank">Abrir Grok &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>4 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar que existem 4 grandes opcoes. Cada um tem pontos fortes.
+    Para reguladores, o mais importante e: todos sao gratuitos no tier básico.
+    Demo: abrir cada link e mostrar rapidamente a interface.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: CAPACIDADES AVANCADAS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Capacidades Avançadas dos Chatbots</h2>
+    <div class="cards-grid cols-3" style="margin-top: 10px;">
+      <div class="card">
+        <div class="icon">&#x1F50D;</div>
+        <h4>Deep Research</h4>
+        <ul>
+          <li>Pesquisa autonoma em dezenas de fontes</li>
+          <li>Relatório estruturado com citações</li>
+          <li>Disponivel no ChatGPT Pro e Gemini Advanced</li>
+          <li>Ideal para revisoes bibliograficas</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x1F3A8;</div>
+        <h4>Canvas / Artifacts</h4>
+        <ul>
+          <li>Edição colaborativa de documentos</li>
+          <li>Codigo executavel inline</li>
+          <li>ChatGPT Canvas, Claude Artifacts</li>
+          <li>Ideal para relatórios e análises</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F4BB;</div>
+        <h4>Análise de Dados (ADA)</h4>
+        <ul>
+          <li>Upload de CSV/Excel direto no chat</li>
+          <li>Executa Python automaticamente</li>
+          <li>Gera gráficos e estatísticas</li>
+          <li>ChatGPT Code Interpreter, Gemini</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>5 / 28</span>
+  </div>
+  <aside class="notes">
+    Explicar as 3 capacidades avancadas. Deep Research e como ter um pesquisador assistente.
+    Canvas/Artifacts permitem editar documentos de forma colaborativa com a IA.
+    ADA (Advanced Data Analysis) permite fazer data science dentro do chat, sem instalar nada.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: IDEs COM IA -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>IDEs com IA Integrada</h2>
+    <p style="font-size:0.7em; color:#666; margin-bottom:10px;">Editores de código que usam IA para autocompletar, refatorar e gerar código inteiro</p>
+    <div class="cards-grid cols-3" style="margin-top: 5px;">
+      <div class="card">
+        <div class="icon">&#x1F4DD;</div>
+        <h4>VS Code + Copilot</h4>
+        <p>Editor da Microsoft com GitHub Copilot integrado. Gratuito para uso básico. O mais usado no mundo.</p>
+        <a href="https://code.visualstudio.com" target="_blank">VS Code &rarr;</a>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x26A1;</div>
+        <h4>Cursor</h4>
+        <p>Fork do VS Code focado em IA. Composer gera projetos inteiros. Integra Claude, GPT-4o, Gemini.</p>
+        <a href="https://cursor.com" target="_blank">Cursor &rarr;</a>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F3C4;</div>
+        <h4>Windsurf</h4>
+        <p>IDE com agente Cascade que entende o projeto inteiro. Flows para automação de tarefas complexas.</p>
+        <a href="https://windsurf.com" target="_blank">Windsurf &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>6 / 28</span>
+  </div>
+  <aside class="notes">
+    Para quem quer ir alem do chatbot: IDEs com IA permitem criar projetos completos.
+    VS Code e gratuito e o mais usado. Cursor e Windsurf sao alternativas mais avancadas.
+    Demo: mostrar rapidamente o Cursor Composer gerando código.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: CLIs COM IA -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>CLIs com IA &mdash; Agentes no Terminal</h2>
+    <p style="font-size:0.7em; color:#666; margin-bottom:10px;">Ferramentas de linha de comando que executam tarefas autonomamente</p>
+    <div class="cards-grid cols-3" style="margin-top: 5px;">
+      <div class="card">
+        <div class="icon">&#x1F4BB;</div>
+        <h4>Claude Code (Anthropic)</h4>
+        <div class="terminal" style="margin-top:8px;">
+<span class="prompt">$</span> <span class="cmd">claude</span>
+<span class="output">> Análise os dados em data.csv
+  e gere um relatório com gráficos</span>
+<span class="prompt">Claude:</span> <span class="output">Vou analisar o CSV...
+  [cria script Python, executa, gera gráficos]</span>
+        </div>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x1F310;</div>
+        <h4>OpenAI Codex CLI</h4>
+        <div class="terminal" style="margin-top:8px;">
+<span class="prompt">$</span> <span class="cmd">codex</span>
+<span class="output">> Crie uma API REST para
+  gerenciar medicoes de gas</span>
+<span class="prompt">Codex:</span> <span class="output">Criando projeto FastAPI...
+  [gera arquivos, instala deps]</span>
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F527;</div>
+        <h4>Gemini CLI (Google)</h4>
+        <div class="terminal" style="margin-top:8px;">
+<span class="prompt">$</span> <span class="cmd">gemini</span>
+<span class="output">> Otimize as queries SQL
+  do dashboard de regulação</span>
+<span class="prompt">Gemini:</span> <span class="output">Analisando queries...
+  [identifica gargalos, reescreve]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>7 / 28</span>
+  </div>
+  <aside class="notes">
+    CLIs sao mais poderosas que chatbots porque executam código diretamente no terminal.
+    Claude Code e o que estou usando AGORA para criar esta apresentacao.
+    Eles podem criar projetos inteiros, rodar testes, fazer deploy.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: AGENTES AUTONOMOS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Agentes Autonomos</h2>
+    <p style="font-size:0.7em; color:#666; margin-bottom:10px;">IAs que navegam a web, executam tarefas complexas e entregam resultados completos</p>
+    <div class="cards-grid cols-3" style="margin-top: 5px;">
+      <div class="card">
+        <div class="icon">&#x1F916;</div>
+        <h4>Manus</h4>
+        <p>Agente geral: pesquisa, cria documentos, analisa dados, navega sites. Executa tarefas de horas em minutos.</p>
+        <a href="https://manus.im" target="_blank">Manus &rarr;</a>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x2728;</div>
+        <h4>Genspark</h4>
+        <p>Pesquisa profunda com Super Agent. Gera "Sparkpages" &mdash; páginas interativas com dados e gráficos.</p>
+        <a href="https://genspark.ai" target="_blank">Genspark &rarr;</a>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F91D;</div>
+        <h4>Claude Cowork</h4>
+        <p>Modo colaborativo do Claude. Multiplos agentes trabalhando em paralelo em sub-tarefas complexas.</p>
+        <a href="https://claude.ai" target="_blank">Claude &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>8 / 28</span>
+  </div>
+  <aside class="notes">
+    Agentes sao o proximo passo: IAs que nao apenas respondem, mas AGEM.
+    Manus pode fazer pesquisa de mercado inteira sozinho.
+    Genspark cria páginas com análises completas.
+    O futuro proximo e delegar tarefas inteiras para agentes.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: QUAL FERRAMENTA PARA QUAL TAREFA -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Ferramentas de IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Qual Ferramenta Para Qual Tarefa?</h2>
+    <table class="styled-table" style="margin-top: 15px;">
+      <thead>
+        <tr><th>Tarefa</th><th>Melhor Opção</th><th>Alternativa</th><th>Nível</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Pergunta rapida</td><td>ChatGPT / Gemini</td><td>Claude, Grok</td><td style="color:var(--abar-verde);">Iniciante</td></tr>
+        <tr><td>Análise de planilha</td><td>ChatGPT (Code Interpreter)</td><td>Gemini</td><td style="color:var(--abar-verde);">Iniciante</td></tr>
+        <tr><td>Pesquisa profunda</td><td>Gemini Deep Research</td><td>ChatGPT Deep Research</td><td style="color:var(--abar-verde);">Iniciante</td></tr>
+        <tr><td>Escrita de relatório</td><td>Claude (Artifacts)</td><td>ChatGPT Canvas</td><td style="color:var(--abar-verde);">Iniciante</td></tr>
+        <tr><td>Gerar código simples</td><td>ChatGPT / Claude</td><td>Cursor</td><td style="color:var(--abar-laranja);">Intermediário</td></tr>
+        <tr><td>Projeto completo</td><td>Cursor / Claude Code</td><td>Windsurf</td><td style="color:var(--abar-laranja);">Intermediário</td></tr>
+        <tr><td>Automação complexa</td><td>Claude Code / Codex</td><td>Manus</td><td style="color:var(--abar-vermelho);">Avançado</td></tr>
+        <tr><td>Data pipeline completo</td><td>Claude Code + Python</td><td>Cursor + Python</td><td style="color:var(--abar-vermelho);">Avançado</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>9 / 28</span>
+  </div>
+  <aside class="notes">
+    Tabela de referência. A mensagem principal: comece pelo iniciante (chatbots),
+    avance conforme necessidade. Nao precisa ser programador para comecar.
+    Para reguladores, as tarefas de nivel Iniciante ja cobrem 80% das necessidades.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: DEMO 1 - ChatGPT -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Demo ao Vivo</span>
+  </div>
+  <div class="slide-content" style="align-items: center; text-align: center;">
+    <div class="demo-banner">&#x1F3AC; DEMO AO VIVO</div>
+    <h2>Demo 1: ChatGPT &mdash; Análise de Dados</h2>
+    <div style="max-width: 700px; margin: 0 auto; text-align: left;">
+      <ol class="steps">
+        <li>Abrir <a href="https://chatgpt.com" target="_blank">chatgpt.com</a></li>
+        <li>Fazer upload de uma planilha Excel de medicoes</li>
+        <li>Pedir: <em>"Análise estes dados, identifique tendencias e gere gráficos"</em></li>
+        <li>Mostrar o Code Interpreter executando Python automaticamente</li>
+        <li>Baixar os gráficos e relatório gerados</li>
+      </ol>
+    </div>
+    <div style="margin-top: 20px;">
+      <a href="https://chatgpt.com" target="_blank" class="link-btn" style="font-size:0.9em; padding: 12px 30px;">
+        Abrir ChatGPT &rarr;
+      </a>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>10 / 28</span>
+  </div>
+  <aside class="notes">
+    DEMO AO VIVO ~10 min. Ter a planilha de medicoes pronta.
+    Mostrar o processo completo: upload, prompt, execucao, resultado.
+    Enfatizar que nao precisou escrever nenhum código.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: DEMO Claude -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 1 &mdash; Demo ao Vivo</span>
+  </div>
+  <div class="slide-content">
+    <div class="demo-banner">&#x1F3AC; DEMO AO VIVO</div>
+    <h2>Demo 1b: Claude Code &mdash; Projeto Completo</h2>
+    <div class="two-cols" style="margin-top: 10px;">
+      <div>
+        <h3>O que o Claude Code faz</h3>
+        <ul style="font-size:0.7em;">
+          <li>Le e entende projetos inteiros</li>
+          <li>Cria arquivos, executa comandos</li>
+          <li>Instala dependencias automaticamente</li>
+          <li>Roda testes e corrige erros</li>
+          <li>Faz deploy para producao</li>
+        </ul>
+        <div class="terminal" style="margin-top:15px;">
+<span class="prompt">$</span> <span class="cmd">claude</span>
+<span class="output">> Crie uma apresentacao HTML
+  interativa com 28 slides</span>
+<span class="prompt">Claude:</span> <span class="output">Vou criar usando Reveal.js...
+  [esta apresentacao foi criada assim!]</span>
+        </div>
+      </div>
+      <div>
+        <h3>Comparativo: Chat vs CLI</h3>
+        <table class="styled-table" style="font-size:0.85em;">
+          <thead><tr><th>Aspecto</th><th>Chatbot</th><th>CLI</th></tr></thead>
+          <tbody>
+            <tr><td>Interface</td><td>Web</td><td>Terminal</td></tr>
+            <tr><td>Execução</td><td>Sandbox</td><td>Local</td></tr>
+            <tr><td>Alcance</td><td>1 arquivo</td><td>Projeto inteiro</td></tr>
+            <tr><td>Autonomia</td><td>Baixa</td><td>Alta</td></tr>
+            <tr><td>Ideal para</td><td>Tarefas pontuais</td><td>Projetos complexos</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>11 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar o Claude Code no terminal. Enfatizar: esta apresentacao foi criada pelo Claude Code!
+    Comparar com o chatbot: o CLI tem acesso total ao sistema, pode criar projetos inteiros.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: METODOLOGIA IBM (Módulo 2) -->
+<!-- ============================================================ -->
+<section data-background-color="var(--abar-verde)">
+  <h2 style="text-align:center;">Módulo 2: Data Science com IA</h2>
+  <h3 style="text-align:center;">Metodologia, coleta, limpeza e análise de dados</h3>
+  <aside class="notes">Transição para o Módulo 2. Agora vamos aplicar as ferramentas.</aside>
+</section>
+
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 2 &mdash; Data Science com IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Metodologia IBM para Data Science</h2>
+    <div class="two-cols" style="margin-top: 10px;">
+      <div style="display:flex; align-items:center; justify-content:center;">
+        <img src="../WhatsApp Image 2026-02-12 at 10.32.47.jpeg" alt="IBM Data Science Methodology" class="img-safe" style="max-height: 380px;">
+      </div>
+      <div>
+        <h3>9 Etapas do Ciclo</h3>
+        <ol style="font-size: 0.65em; padding-left: 20px;">
+          <li><strong>Compreensão do Negócio</strong> &mdash; Qual o problema regulatório?</li>
+          <li><strong>Abordagem Analítica</strong> &mdash; Que tipo de análise resolve?</li>
+          <li><strong>Requisitos de Dados</strong> &mdash; Que dados precisamos?</li>
+          <li><strong>Coleta de Dados</strong> &mdash; APIs, web scraping, portais</li>
+          <li><strong>Compreensão dos Dados</strong> &mdash; Explorar e entender</li>
+          <li><strong>Preparação dos Dados</strong> &mdash; Limpeza e transformação</li>
+          <li><strong>Modelagem</strong> &mdash; Análise estatística, ML</li>
+          <li><strong>Avaliação</strong> &mdash; Os resultados respondem a pergunta?</li>
+          <li><strong>Deploy</strong> &mdash; Relatório, dashboard, sistema web</li>
+        </ol>
+        <p style="font-size:0.6em; color:#666; margin-top:10px;">
+          <strong>Insight:</strong> Com IA, um nao-programador pode executar todas as 9 etapas.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>12 / 28</span>
+  </div>
+  <aside class="notes">
+    A metodologia IBM e o framework padrao para projetos de data science.
+    Sao 9 etapas ciclicas (iterativas). O insight principal: com IA assistindo,
+    um regulador sem formacao em programacao consegue executar todas as etapas.
+    Vamos ver como nas proximas slides.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: MULTIMODALIDADE -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 2 &mdash; Data Science com IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Multimodalidade &mdash; Além do Texto</h2>
+    <p style="font-size:0.7em; color:#666; margin-bottom:15px;">IAs modernas processam texto, imagens, audio, video e código simultaneamente</p>
+    <div class="cards-grid cols-3" style="margin-top: 5px;">
+      <div class="card">
+        <div class="icon" style="font-size:2.5em;">&#x1F4F7;</div>
+        <h4>Visão Computacional</h4>
+        <ul>
+          <li>Análise de imagens e PDFs</li>
+          <li>Extração de dados de tabelas escaneadas</li>
+          <li>Leitura de gráficos e diagramas</li>
+          <li>OCR inteligente</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <div class="icon" style="font-size:2.5em;">&#x1F3A4;</div>
+        <h4>Audio e Voz</h4>
+        <ul>
+          <li>Transcrição de reuniões (Whisper)</li>
+          <li>Análise de sentimento em chamadas</li>
+          <li>Text-to-Speech (ElevenLabs)</li>
+          <li>Modo de voz em tempo real</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <div class="icon" style="font-size:2.5em;">&#x1F4CA;</div>
+        <h4>Dados Estruturados</h4>
+        <ul>
+          <li>Upload direto de CSV/Excel</li>
+          <li>Geração automatica de código</li>
+          <li>Visualizações interativas</li>
+          <li>Relatórios formatados</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>13 / 28</span>
+  </div>
+  <aside class="notes">
+    Multimodalidade muda o jogo: voce pode tirar foto de uma tabela impressa,
+    enviar para a IA e ela extrai os dados. Pode transcrever reuniões automaticamente.
+    Para reguladores que lidam com documentos antigos, isso e transformador.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: DADOS ABERTOS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 2 &mdash; Data Science com IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Fontes de Dados Abertos para Reguladores</h2>
+    <div class="two-cols" style="margin-top: 10px;">
+      <div>
+        <h3>Portais de Dados</h3>
+        <div class="card" style="margin-bottom:10px;">
+          <h4>&#x1F4E6; Kaggle</h4>
+          <p>Maior plataforma de datasets do mundo. Milhares de datasets publicos, notebooks prontos e competicoes.</p>
+          <a href="https://kaggle.com/datasets" target="_blank">Explorar Kaggle &rarr;</a>
+        </div>
+        <div class="card green">
+          <h4>&#x1F1E7;&#x1F1F7; dados.gov.br</h4>
+          <p>Portal brasileiro de dados abertos. Dados de todas as agencias reguladoras federais e estaduais.</p>
+          <a href="https://dados.gov.br" target="_blank">Explorar dados.gov.br &rarr;</a>
+        </div>
+      </div>
+      <div>
+        <h3>Dados Setoriais</h3>
+        <div class="card orange" style="margin-bottom:10px;">
+          <h4>&#x26FD; ANP &mdash; Paineis Dinâmicos</h4>
+          <p>Precos de combustiveis, producao de petroleo, gas natural. Dados atualizados semanalmente.</p>
+          <a href="https://www.gov.br/anp/pt-br/centrais-de-conteúdo/paineis-dinamicos-702" target="_blank">ANP Paineis &rarr;</a>
+        </div>
+        <div class="card red">
+          <h4>&#x1F525; Observatorio do Gas</h4>
+          <p>Dados do mercado de gas natural brasileiro. Precos, volumes, infraestrutura.</p>
+          <a href="https://www.gov.br/mme/pt-br/assuntos/secretarias/petroleo-gas-natural-e-biocombustiveis/observatorio-do-gas-natural" target="_blank">Observatorio &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>14 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar que dados abertos sao a materia-prima. Reguladores tem acesso privilegiado
+    a dados setoriais. Demo: abrir o Kaggle e mostrar datasets relevantes.
+    Abrir o portal dados.gov.br e buscar dados de regulação.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15: WEB SCRAPING -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 2 &mdash; Data Science com IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Web Scraping com IA</h2>
+    <p style="font-size:0.7em; color:#666;">Quando os dados nao estao em formato acessível, a IA ajuda a extrair</p>
+    <div class="two-cols" style="margin-top: 10px;">
+      <div>
+        <h3>Processo com IA</h3>
+        <ol class="steps">
+          <li>Identificar a fonte de dados (site, PDF, API)</li>
+          <li>Pedir a IA para gerar o código de extração</li>
+          <li>A IA escreve o scraper em Python</li>
+          <li>Executa, coleta e organiza os dados</li>
+          <li>Exporta para CSV/Excel para análise</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Exemplo: Extrair precos da ANP</h3>
+        <pre><code class="language-python"># Codigo gerado pela IA automaticamente
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+url = "https://www.gov.br/anp/..."
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Extrair tabela de precos
+tabela = soup.find('table', class_='dados')
+df = pd.read_html(str(tabela))[0]
+
+# Salvar em Excel
+df.to_excel('precos_anp.xlsx', index=False)
+print(f"Extraidos {len(df)} registros")</code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>15 / 28</span>
+  </div>
+  <aside class="notes">
+    Web scraping e essencial quando os dados nao estao em CSV/API.
+    A IA gera o código completo — o regulador so precisa dizer o que quer.
+    Exemplo real: extrair precos de combustiveis do site da ANP.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16: LIMPEZA DE DADOS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 2 &mdash; Data Science com IA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Limpeza de Dados com IA</h2>
+    <p style="font-size:0.7em; color:#666;">A etapa mais demorada &mdash; a IA reduz de horas para minutos</p>
+    <div class="two-cols" style="margin-top: 10px;">
+      <div>
+        <h3>Problemas comuns</h3>
+        <div class="card" style="margin-bottom:8px; font-size:0.9em;">
+          <p>&#x26A0; Valores ausentes (NaN, vazios)</p>
+        </div>
+        <div class="card" style="margin-bottom:8px; font-size:0.9em;">
+          <p>&#x26A0; Formatos inconsistentes (datas, moedas)</p>
+        </div>
+        <div class="card" style="margin-bottom:8px; font-size:0.9em;">
+          <p>&#x26A0; Duplicatas e erros de digitacao</p>
+        </div>
+        <div class="card" style="margin-bottom:8px; font-size:0.9em;">
+          <p>&#x26A0; Outliers e valores impossiveis</p>
+        </div>
+        <div class="card" style="font-size:0.9em;">
+          <p>&#x26A0; Encoding (acentos, caracteres especiais)</p>
+        </div>
+      </div>
+      <div>
+        <h3>Solucao: prompt para a IA</h3>
+        <div class="terminal">
+<span class="prompt">Prompt:</span>
+<span class="output">"Limpe este dataset:
+- Remova duplicatas
+- Preencha valores ausentes com a mediana
+- Padronize datas para YYYY-MM-DD
+- Remova outliers > 3 desvios padrao
+- Exporte para CSV limpo"</span>
+
+<span class="prompt">IA:</span> <span class="cmd">Gerando código de limpeza...</span>
+<span class="output">
+import pandas as pd
+df = pd.read_excel('dados_brutos.xlsx')
+df = df.drop_duplicates()
+df['valor'] = df['valor'].fillna(
+    df['valor'].median())
+# ... [código completo gerado]
+df.to_csv('dados_limpos.csv')</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>16 / 28</span>
+  </div>
+  <aside class="notes">
+    Limpeza consome 60-80% do tempo em data science. Com IA, voce descreve
+    o que quer e ela gera o código. Mostrar um exemplo real de dados sujos
+    e como a IA limpa automaticamente.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 17: 7 NOTEBOOKS (Módulo 3) -->
+<!-- ============================================================ -->
+<section data-background-color="var(--abar-laranja)">
+  <h2 style="text-align:center;">Módulo 3: Caso Real AGENERSA</h2>
+  <h3 style="text-align:center;">Sistema completo de auditoria de gas canalizado</h3>
+  <aside class="notes">Transição para o Módulo 3. Agora vem o caso real.</aside>
+</section>
+
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Caso Real AGENERSA</span>
+  </div>
+  <div class="slide-content">
+    <h2>7 Notebooks Jupyter &mdash; Pipeline Completo</h2>
+    <table class="styled-table" style="margin-top: 10px;">
+      <thead>
+        <tr><th>#</th><th>Notebook</th><th>Função</th><th>Ferramentas</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">1</td><td>Configuração</td><td>Setup do ambiente, credenciais, paths</td><td>Python, dotenv</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">2</td><td>Coleta de Dados</td><td>Download de planilhas da AGENERSA</td><td>requests, openpyxl</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">3</td><td>Limpeza</td><td>Tratamento, padronização, validação</td><td>pandas, numpy</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">4</td><td>Análise Exploratória</td><td>Estatísticas, distribuicoes, correlações</td><td>pandas, scipy</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">5</td><td>Visualizações</td><td>23 gráficos profissionais</td><td>matplotlib, seaborn</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">6</td><td>Relatório</td><td>Documento Word de 100+ páginas</td><td>Gemini API, docx</td></tr>
+        <tr><td style="font-weight:700; color:var(--abar-azul);">7</td><td>Interface Web</td><td>Dashboard + sistema de downloads</td><td>FastAPI, HTML/CSS</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.6em; color:#666; margin-top:8px; text-align:center;">
+      Todo o pipeline foi criado com assistencia de IA (Claude Code + Gemini API)
+    </p>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>17 / 28</span>
+  </div>
+  <aside class="notes">
+    Este e o caso real. 7 notebooks que cobrem TODO o ciclo IBM.
+    Cada notebook corresponde a uma ou mais etapas da metodologia.
+    O regulador (eu) nao e programador — a IA assistiu em cada etapa.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 18: DEMO 2 - NOTEBOOKS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Demo ao Vivo</span>
+  </div>
+  <div class="slide-content" style="align-items:center; text-align:center;">
+    <div class="demo-banner">&#x1F3AC; DEMO AO VIVO</div>
+    <h2>Demo 2: Notebooks Jupyter</h2>
+    <blockquote style="max-width:700px; margin:15px auto;">
+      "Eu nao sou programador. Sou um regulador que aprendeu a usar IA para fazer data science.
+      Todo este sistema foi criado com assistencia de inteligencia artificial."
+      <br><strong>&mdash; Raul Araujo</strong>
+    </blockquote>
+    <div style="max-width:600px; margin:0 auto; text-align:left;">
+      <ol class="steps">
+        <li>Abrir o Jupyter Lab com os 7 notebooks</li>
+        <li>Executar o Notebook 5 (Visualizações) ao vivo</li>
+        <li>Mostrar como a IA gerou os 23 gráficos</li>
+        <li>Executar o Notebook 6 (Relatório com Gemini API)</li>
+        <li>Mostrar o relatório de 100+ páginas gerado em 1:42 min</li>
+      </ol>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>18 / 28</span>
+  </div>
+  <aside class="notes">
+    Demo mais longa ~15 min. Mostrar os notebooks reais rodando.
+    O ponto alto: o relatório de 100+ páginas gerado em 1:42 min com 28 chamadas
+    paralelas a Gemini API. Isso levaria semanas manualmente.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 19: ARQUITETURA DO SISTEMA -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Caso Real AGENERSA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Arquitetura do Sistema</h2>
+    <div class="cards-grid cols-3" style="margin-top: 10px;">
+      <div style="text-align:center;">
+        <h3 style="font-size:0.8em;">Fluxo de Auditoria</h3>
+        <img src="../../outputs/diagramas/fluxo_auditoria.png" alt="Fluxo de Auditoria" class="img-safe" style="max-height: 320px;">
+      </div>
+      <div style="text-align:center;">
+        <h3 style="font-size:0.8em;">Processo de Análise</h3>
+        <img src="../../outputs/diagramas/processo_análise.png" alt="Processo de Análise" class="img-safe" style="max-height: 320px;">
+      </div>
+      <div style="text-align:center;">
+        <h3 style="font-size:0.8em;">Estrutura por Distrito</h3>
+        <img src="../../outputs/diagramas/estrutura_distrito.png" alt="Estrutura Distrito" class="img-safe" style="max-height: 320px;">
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>19 / 28</span>
+  </div>
+  <aside class="notes">
+    3 diagramas que mostram a arquitetura. Gerados automaticamente pelo Python.
+    Fluxo de auditoria: como os dados fluem do Excel ate o relatório final.
+    Processo de análise: etapas detalhadas.
+    Estrutura por distrito: como a AGENERSA organiza os dados por area.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 20: INTERFACE WEB -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Demo ao Vivo</span>
+  </div>
+  <div class="slide-content">
+    <div class="demo-banner">&#x1F3AC; DEMO AO VIVO</div>
+    <h2>Demo 3: Interface Web do Sistema</h2>
+    <div class="cards-grid g2x3" style="margin-top: 5px;">
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/01_web_config.png" alt="Configuração" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Configuração</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/02_web_pipeline.png" alt="Pipeline" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Pipeline</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/03_web_gráficos.png" alt="Gráficos" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Gráficos</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/04_web_diagramas.png" alt="Diagramas" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Diagramas</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/05_web_textos.png" alt="Textos" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Textos</p>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/screenshots/06_web_downloads.png" alt="Downloads" class="img-safe" style="max-height: 160px;">
+        <p style="font-size:0.5em; color:#666;">Downloads</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>20 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar a interface web (FastAPI). 6 abas: configuracao, pipeline, gráficos,
+    diagramas, textos e downloads. Tudo gerado pelo Notebook 7.
+    Demo ao vivo: abrir o sistema e navegar pelas abas.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 21: RELATORIO FINAL -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Caso Real AGENERSA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Relatório Final &mdash; Resultados</h2>
+    <div class="cards-grid cols-4" style="margin-top: 15px;">
+      <div class="stat-box card">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Páginas do relatório</div>
+      </div>
+      <div class="stat-box card green">
+        <div class="stat-number">23</div>
+        <div class="stat-label">Gráficos gerados</div>
+      </div>
+      <div class="stat-box card orange">
+        <div class="stat-number">1:42</div>
+        <div class="stat-label">Minutos para gerar</div>
+      </div>
+      <div class="stat-box card red">
+        <div class="stat-number">28</div>
+        <div class="stat-label">Chamadas paralelas<br>a Gemini API</div>
+      </div>
+    </div>
+    <div class="two-cols" style="margin-top: 15px;">
+      <div>
+        <h3>Estrutura do Relatório</h3>
+        <ul style="font-size:0.65em;">
+          <li>Sumário executivo</li>
+          <li>Análise por distrito (5 distritos)</li>
+          <li>Indicadores de desempenho</li>
+          <li>Comparativos temporais</li>
+          <li>Recomendações regulatórias</li>
+          <li>Anexos com dados completos</li>
+        </ul>
+      </div>
+      <div style="text-align:center;">
+        <img src="../../outputs/diagramas/processo_análise.png" alt="Pipeline" class="img-safe" style="max-height: 200px;">
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>21 / 28</span>
+  </div>
+  <aside class="notes">
+    Numeros impressionantes: 100+ páginas em 1 minuto e 42 segundos.
+    28 chamadas paralelas a API do Gemini geram cada secao simultaneamente.
+    Isso seria semanas de trabalho manual. Com IA: minutos.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 22: COMPARATIVO ANTES/DEPOIS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Caso Real AGENERSA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Antes vs Depois da IA</h2>
+    <table class="styled-table" style="margin-top: 15px;">
+      <thead>
+        <tr>
+          <th>Aspecto</th>
+          <th style="background:var(--abar-vermelho);">Antes (Manual)</th>
+          <th style="background:var(--abar-verde);">Depois (com IA)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Coleta de dados</strong></td><td>Copiar/colar manual de planilhas</td><td>Scripts automaticos + APIs</td></tr>
+        <tr><td><strong>Limpeza</strong></td><td>Horas no Excel, erro humano</td><td>Codigo gerado pela IA, reproduzível</td></tr>
+        <tr><td><strong>Análise</strong></td><td>Tabelas dinâmicas básicas</td><td>23 gráficos + estatística avancada</td></tr>
+        <tr><td><strong>Relatório</strong></td><td>Semanas escrevendo no Word</td><td>100+ páginas em 1:42 min</td></tr>
+        <tr><td><strong>Visualização</strong></td><td>Gráficos manuais no Excel</td><td>Dashboard interativo web</td></tr>
+        <tr><td><strong>Reprodutibilidade</strong></td><td>Impossível de replicar</td><td>1 click para re-executar tudo</td></tr>
+        <tr><td><strong>Atualização</strong></td><td>Refazer do zero</td><td>Novos dados entram no pipeline</td></tr>
+        <tr><td><strong>Conhecimento necessario</strong></td><td>Excel avancado</td><td>Saber formular perguntas</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>22 / 28</span>
+  </div>
+  <aside class="notes">
+    Este e o slide mais impactante. Comparacao direta entre o metodo tradicional
+    e o metodo assistido por IA. A mudanca mais importante: de "saber Excel"
+    para "saber formular perguntas". Isso democratiza a análise de dados.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 23: DASHBOARD AGENERSA -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 3 &mdash; Caso Real AGENERSA</span>
+  </div>
+  <div class="slide-content">
+    <h2>Dashboard AGENERSA &mdash; Ao Vivo</h2>
+    <p style="font-size:0.65em; color:#666; margin-bottom:10px;">Dashboard de auditoria de gas canalizado, acessível publicamente</p>
+    <div class="iframe-container" style="flex:1;">
+      <iframe src="https://dbagenersa.vercel.app/" loading="lazy" allow="fullscreen"></iframe>
+    </div>
+    <div style="text-align:center; margin-top:8px;">
+      <a href="https://dbagenersa.vercel.app/" target="_blank" class="link-btn">
+        Abrir em nova aba &rarr;
+      </a>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>23 / 28</span>
+  </div>
+  <aside class="notes">
+    PONTO ALTO: o dashboard esta ao vivo, incorporado na apresentacao!
+    Se o iframe nao carregar (rede do evento), clicar no botao para abrir em nova aba.
+    Navegar pelo dashboard: filtros, gráficos, tabelas.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 24: DASHBOARD ANP (Módulo 4) -->
+<!-- ============================================================ -->
+<section data-background-color="var(--abar-vermelho)" style="color:white;">
+  <h2 style="text-align:center;">Módulo 4: Entrega e Avaliação</h2>
+  <h3 style="text-align:center;">Deploy, ferramentas complementares e próximos passos</h3>
+  <aside class="notes">Transição para o Módulo 4 final.</aside>
+</section>
+
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 4 &mdash; Entrega e Avaliação</span>
+  </div>
+  <div class="slide-content">
+    <h2>Paineis Dinâmicos da ANP</h2>
+    <p style="font-size:0.65em; color:#666; margin-bottom:10px;">Exemplo de dashboard governamental com dados abertos do setor de energia</p>
+    <div class="iframe-container" style="flex:1;">
+      <iframe src="https://www.gov.br/anp/pt-br/centrais-de-conteúdo/paineis-dinamicos-702" loading="lazy"></iframe>
+    </div>
+    <div style="text-align:center; margin-top:8px;">
+      <a href="https://www.gov.br/anp/pt-br/centrais-de-conteúdo/paineis-dinamicos-702" target="_blank" class="link-btn green">
+        Abrir ANP Paineis &rarr;
+      </a>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>24 / 28</span>
+  </div>
+  <aside class="notes">
+    Mostrar o painel da ANP como exemplo de como dados abertos sao publicados.
+    Comparar com o dashboard AGENERSA — ambos usam dados publicos.
+    Se o iframe nao carregar, abrir em nova aba.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 25: FERRAMENTAS DE DEPLOY -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 4 &mdash; Entrega e Avaliação</span>
+  </div>
+  <div class="slide-content">
+    <h2>Ferramentas de Deploy &mdash; Publicar seu Projeto</h2>
+    <p style="font-size:0.7em; color:#666; margin-bottom:15px;">Publicar um dashboard ou sistema web e mais facil do que parece</p>
+    <div class="cards-grid cols-3" style="margin-top: 5px;">
+      <div class="card">
+        <div class="icon">&#x1F680;</div>
+        <h4>Streamlit</h4>
+        <p>Transforme scripts Python em apps web interativos. Zero frontend necessario. Gratuito para projetos publicos.</p>
+        <ul>
+          <li>Python puro &rarr; web app</li>
+          <li>Deploy em 1 comando</li>
+          <li>Ideal para dashboards de dados</li>
+        </ul>
+        <a href="https://streamlit.io" target="_blank">Streamlit &rarr;</a>
+      </div>
+      <div class="card green">
+        <div class="icon">&#x25B2;</div>
+        <h4>Vercel</h4>
+        <p>Plataforma de deploy instantaneo. Conecta ao GitHub e publica automaticamente a cada commit.</p>
+        <ul>
+          <li>Deploy automatico via Git</li>
+          <li>HTTPS gratuito</li>
+          <li>Ideal para sites e dashboards</li>
+        </ul>
+        <a href="https://vercel.com" target="_blank">Vercel &rarr;</a>
+      </div>
+      <div class="card orange">
+        <div class="icon">&#x1F4CA;</div>
+        <h4>Looker Studio</h4>
+        <p>Ferramenta gratuita do Google para dashboards. Conecta direto a Google Sheets, BigQuery, CSV.</p>
+        <ul>
+          <li>Drag-and-drop visual</li>
+          <li>Compartilhamento facil</li>
+          <li>Ideal para relatórios recorrentes</li>
+        </ul>
+        <a href="https://lookerstudio.google.com" target="_blank">Looker Studio &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>25 / 28</span>
+  </div>
+  <aside class="notes">
+    Tres opcoes de deploy, da mais simples a mais flexivel.
+    Streamlit: ideal para quem so sabe Python. Vercel: para projetos web completos.
+    Looker Studio: para quem quer dashboard sem código. Todos gratuitos!
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 26: NOTEBOOKLM -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 4 &mdash; Entrega e Avaliação</span>
+  </div>
+  <div class="slide-content">
+    <div class="demo-banner">&#x1F3AC; DEMO AO VIVO</div>
+    <h2>NotebookLM &mdash; IA para Estudo de Documentos</h2>
+    <div class="two-cols" style="margin-top: 15px;">
+      <div>
+        <h3>O que e?</h3>
+        <p style="font-size:0.7em;">Ferramenta do Google que le seus documentos e permite conversar com eles. Ideal para:</p>
+        <ul style="font-size:0.65em;">
+          <li>Estudar normas regulatórias longas</li>
+          <li>Resumir relatórios de auditoria</li>
+          <li>Comparar versoes de regulamentos</li>
+          <li>Gerar FAQs a partir de documentos</li>
+          <li>Criar podcasts automaticos (!)</li>
+        </ul>
+        <div style="margin-top:15px;">
+          <a href="https://notebooklm.google.com" target="_blank" class="link-btn" style="font-size:0.85em;">
+            Abrir NotebookLM &rarr;
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3>Perguntas para a demo</h3>
+        <div class="card" style="margin-bottom:8px;">
+          <p>"Resuma os principais achados do relatório de auditoria"</p>
+        </div>
+        <div class="card green" style="margin-bottom:8px;">
+          <p>"Quais distritos apresentaram irregularidades?"</p>
+        </div>
+        <div class="card orange" style="margin-bottom:8px;">
+          <p>"Compare os indicadores de 2023 vs 2024"</p>
+        </div>
+        <div class="card red">
+          <p>"Gere um FAQ para os fiscais de campo"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>26 / 28</span>
+  </div>
+  <aside class="notes">
+    Demo: abrir NotebookLM, fazer upload do relatório gerado e conversar com ele.
+    Mostrar que a IA responde perguntas baseadas EXCLUSIVAMENTE no documento.
+    Se der tempo, mostrar a funcao de gerar podcast.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 27: MATERIAIS E PROXIMOS PASSOS -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 4 &mdash; Entrega e Avaliação</span>
+  </div>
+  <div class="slide-content">
+    <h2>Materiais e Próximos Passos</h2>
+    <div class="two-cols" style="margin-top: 15px;">
+      <div>
+        <h3>Materiais Disponíveis</h3>
+        <ul style="font-size:0.65em;">
+          <li>&#x1F4E6; Esta apresentacao (HTML interativa)</li>
+          <li>&#x1F4D3; 7 notebooks Jupyter comentados</li>
+          <li>&#x1F4CA; Dashboard: <a href="https://dbagenersa.vercel.app" target="_blank">dbagenersa.vercel.app</a></li>
+          <li>&#x1F4DD; Relatório completo (Word, 100+ páginas)</li>
+          <li>&#x1F4DA; Artigos cientificos de referência</li>
+          <li>&#x1F3AC; Gravações das demos (se autorizadas)</li>
+        </ul>
+        <h3 style="margin-top:15px;">Links Úteis</h3>
+        <ul style="font-size:0.65em;">
+          <li><a href="https://chatgpt.com" target="_blank">chatgpt.com</a> &mdash; ChatGPT</li>
+          <li><a href="https://gemini.google.com" target="_blank">gemini.google.com</a> &mdash; Gemini</li>
+          <li><a href="https://claude.ai" target="_blank">claude.ai</a> &mdash; Claude</li>
+          <li><a href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a> &mdash; NotebookLM</li>
+          <li><a href="https://kaggle.com" target="_blank">kaggle.com</a> &mdash; Datasets</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Cronograma de Estudo Sugerido</h3>
+        <div class="card" style="margin-bottom:8px;">
+          <h4>Semana 1-2</h4>
+          <p>Explorar ChatGPT e Gemini com dados reais do seu trabalho</p>
+        </div>
+        <div class="card green" style="margin-bottom:8px;">
+          <h4>Semana 3-4</h4>
+          <p>Usar Code Interpreter para analisar planilhas de regulação</p>
+        </div>
+        <div class="card orange" style="margin-bottom:8px;">
+          <h4>Mes 2</h4>
+          <p>Experimentar NotebookLM com normas e relatórios</p>
+        </div>
+        <div class="card red">
+          <h4>Mes 3+</h4>
+          <p>Criar seu proprio pipeline de dados com IA</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>27 / 28</span>
+  </div>
+  <aside class="notes">
+    Materiais serao compartilhados apos o curso. O cronograma de estudo e uma sugestao
+    para quem quer continuar aprendendo. Comecar pelo básico (chatbots) e avancar
+    gradualmente. Nao precisa virar programador — precisa saber fazer perguntas certas.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 28: AVALIACAO -->
+<!-- ============================================================ -->
+<section>
+  <div class="slide-header">
+    <img src="../template_Imagem 10.jpg" alt="ABAR">
+    <span>Módulo 4 &mdash; Avaliação Final</span>
+  </div>
+  <div class="slide-content" style="align-items:center; text-align:center;">
+    <h2>Avaliação do Bloco 6</h2>
+    <p style="font-size:0.75em; color:#666; margin-bottom:20px;">
+      Por favor, preencha a avaliação para nos ajudar a melhorar os próximos cursos
+    </p>
+    <div class="cards-grid cols-2" style="max-width: 700px; margin: 0 auto;">
+      <div class="card">
+        <div class="icon" style="font-size:3em;">&#x1F4DD;</div>
+        <h4>Avaliação Escrita</h4>
+        <p>3 questões dissertativas sobre os temas abordados. Documento Word disponibilizado.</p>
+      </div>
+      <div class="card green">
+        <div class="icon" style="font-size:3em;">&#x2B50;</div>
+        <h4>Feedback do Curso</h4>
+        <p>Avalie o conteúdo, metodologia, materiais e sugestões para melhoria.</p>
+      </div>
+    </div>
+    <div style="margin-top:25px;">
+      <h3>Temas para as Questões</h3>
+      <div class="cards-grid cols-3" style="max-width:800px; margin:10px auto 0;">
+        <div class="card" style="text-align:center; padding:15px;">
+          <p><strong>Q1:</strong> Ferramentas de IA e suas aplicações para reguladores</p>
+        </div>
+        <div class="card green" style="text-align:center; padding:15px;">
+          <p><strong>Q2:</strong> Metodologia IBM e pipeline de data science</p>
+        </div>
+        <div class="card orange" style="text-align:center; padding:15px;">
+          <p><strong>Q3:</strong> Aplicação prática no seu órgão regulador</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Curso ABAR 2026</span>
+    <span>28 / 28</span>
+  </div>
+  <aside class="notes">
+    Distribuir a avaliação (documento Word). 30 minutos para responder.
+    Enquanto respondem, ficar disponivel para duvidas individuais.
+    Ao final: agradecer, lembrar dos materiais que serao compartilhados.
+  </aside>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: false,
+  width: 1280,
+  height: 720,
+  margin: 0.04,
+  minScale: 0.2,
+  maxScale: 2.0,
+  transition: 'slide',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  plugins: [RevealNotes, RevealHighlight],
+  // Keyboard shortcuts
+  keyboard: {
+    // F for fullscreen
+    70: function() {
+      var el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    }
+  }
+});
+</script>
+</body>
+</html>
