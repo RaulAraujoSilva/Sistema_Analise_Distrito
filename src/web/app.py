@@ -251,6 +251,98 @@ async def list_downloads():
 
 
 # ---------------------------------------------------------------------------
+# Phase-by-phase execution API
+# ---------------------------------------------------------------------------
+@app.post("/api/phase/extract")
+async def phase_extract():
+    """Phase 0a: Extract data from Excel, save as JSON."""
+    excel_path = DATA_DIR / EXCEL_DEFAULT
+    if not excel_path.exists():
+        raise HTTPException(400, "Excel não encontrado. Faça upload primeiro.")
+
+    try:
+        from extrator_dados import extrair_todos, salvar_json
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        dados = extrair_todos(str(excel_path))
+        json_path = CACHE_DIR / "extracted_data.json"
+        salvar_json(dados, str(json_path))
+
+        # Build summary for response
+        config = dados.get("config")
+        vol = dados.get(2)
+        pcs = dados.get(3)
+        ene = dados.get(4)
+        perf = dados.get(5)
+        bal = dados.get(7)
+        return {
+            "status": "ok",
+            "config": {
+                "periodo": f"{config.periodo_inicio} a {config.periodo_fim}",
+                "dias": config.dias,
+                "n_clientes": config.n_clientes,
+            },
+            "resumo": {
+                "vol_total_nm3": round(vol.vol_total_nm3),
+                "vol_medio_nm3d": round(vol.vol_medio_nm3d),
+                "pcs_media_kcal": round(pcs.media_kcal, 2),
+                "energia_total_gcal": round(ene.total_gcal),
+                "n_clientes": len(perf.clientes),
+                "balanco_pct": bal.diferenca_pct,
+                "balanco_resultado": bal.resultado,
+            },
+        }
+    except Exception as e:
+        raise HTTPException(500, f"Erro na extração: {e}")
+
+
+@app.get("/api/phase/extract/preview")
+async def phase_extract_preview():
+    """Returns extracted data summary for validation UI."""
+    json_path = CACHE_DIR / "extracted_data.json"
+    if not json_path.exists():
+        raise HTTPException(404, "Dados não extraídos. Execute /api/phase/extract primeiro.")
+
+    try:
+        from extrator_dados import carregar_json
+        from dados_distrito import formatar_dados_secao
+        dados = carregar_json(str(json_path))
+        config = dados.get("config")
+        sections = {}
+        labels = {2: "Volumes", 3: "PCS", 4: "Energia", 5: "Clientes", 6: "Incertezas", 7: "Balanço"}
+        for key in [2, 3, 4, 5, 6, 7]:
+            if key in dados:
+                sections[labels[key]] = formatar_dados_secao(dados[key], config=config)
+        return {
+            "config": {
+                "periodo": f"{config.periodo_inicio} a {config.periodo_fim}",
+                "dias": config.dias,
+            } if config else None,
+            "sections": sections,
+        }
+    except Exception as e:
+        raise HTTPException(500, f"Erro ao carregar dados: {e}")
+
+
+@app.post("/api/phase/graphs")
+async def phase_graphs():
+    """Phase 0b: Generate all graphs from Excel."""
+    excel_path = DATA_DIR / EXCEL_DEFAULT
+    if not excel_path.exists():
+        raise HTTPException(400, "Excel não encontrado. Faça upload primeiro.")
+
+    try:
+        from graph_generator import gerar_todos_graficos
+        GRAFICOS_DIR.mkdir(parents=True, exist_ok=True)
+        gerados = gerar_todos_graficos(
+            excel_path=str(excel_path),
+            output_dir=str(GRAFICOS_DIR),
+        )
+        return {"status": "ok", "count": len(gerados), "files": gerados}
+    except Exception as e:
+        raise HTTPException(500, f"Erro ao gerar gráficos: {e}")
+
+
+# ---------------------------------------------------------------------------
 # Presentation generation
 # ---------------------------------------------------------------------------
 @app.post("/api/presentation/generate")

@@ -10,7 +10,8 @@ from typing import AsyncGenerator
 
 # Step map: all discrete steps with human-readable labels
 STEP_MAP = [
-    # Phase 0: Graph generation (6 steps)
+    # Phase 0: Data extraction + graph generation (7 steps)
+    {"step": "data_extraction", "label": "Extração de Dados do Excel", "phase": 0, "chapter": None},
     {"step": "graphs_volumes", "label": "Gráficos — Volumes de Entrada", "phase": 0, "chapter": None},
     {"step": "graphs_pcs", "label": "Gráficos — Poder Calorífico", "phase": 0, "chapter": None},
     {"step": "graphs_energia", "label": "Gráficos — Energia", "phase": 0, "chapter": None},

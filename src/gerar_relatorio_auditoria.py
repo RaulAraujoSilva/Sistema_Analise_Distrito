@@ -45,6 +45,7 @@ from config import (
     REPORTS_DIR, NOTEBOOKS_DIR, NOTEBOOK_LIST, DATA_DIR, EXCEL_DEFAULT,
 )
 from graph_generator import gerar_todos_graficos
+from extrator_dados import extrair_todos, salvar_json, carregar_json
 
 OUTPUT_DEFAULT = "Relatorio_Auditoria_Distrito.docx"
 
@@ -306,7 +307,7 @@ def generate_chapter_standard(client, cap_num: int, resume=False, montar=False, 
 # MONTAGEM DOCX
 # =====================================================================
 
-def assemble_docx(chapters: dict, resumo: str, conclusoes: str, output: str = OUTPUT_DEFAULT):
+def assemble_docx(chapters: dict, resumo: str, conclusoes: str, output: str = OUTPUT_DEFAULT, extracted_data: dict = None):
     """Monta o documento DOCX final."""
     report = AuditReportBuilder(graficos_dir=str(GRAFICOS_DIR))
 
@@ -314,8 +315,8 @@ def assemble_docx(chapters: dict, resumo: str, conclusoes: str, output: str = OU
     report.add_cover_page()
     report.add_headers_footers()
 
-    # Tabelas de dados
-    tabelas = gerar_tabelas_resumo()
+    # Tabelas de dados (dinâmicas se disponíveis)
+    tabelas = gerar_tabelas_resumo(extracted_data)
 
     # Montar sumário com títulos reais
     toc_titles = ["Resumo Executivo"]
@@ -454,16 +455,26 @@ def run_pipeline(
     logger.info(f"  Modo: {'montar' if montar else 'resume' if resume else 'gerar'}")
 
     # ================================================================
-    # FASE 0: GERAÇÃO DOS GRÁFICOS (a partir do Excel)
+    # FASE 0: EXTRAÇÃO DE DADOS + GERAÇÃO DE GRÁFICOS
     # ================================================================
     excel_path = DATA_DIR / EXCEL_DEFAULT
+    extracted_data = None
+    data_json_path = CACHE_DIR / "extracted_data.json"
+
     if excel_path.exists():
         logger.info("")
         logger.info("=" * 60)
-        logger.info("FASE 0: GERAÇÃO DOS GRÁFICOS")
+        logger.info("FASE 0: EXTRAÇÃO DE DADOS + GERAÇÃO DE GRÁFICOS")
         logger.info("=" * 60)
-        _emit(on_progress, "phase_start", phase=0, phase_name="Geração dos Gráficos")
+        _emit(on_progress, "phase_start", phase=0, phase_name="Extração de Dados e Gráficos")
 
+        # 0a. Extração de dados do Excel
+        _emit(on_progress, "step_start", step="data_extraction")
+        extracted_data = extrair_todos(str(excel_path))
+        salvar_json(extracted_data, str(data_json_path))
+        _emit(on_progress, "step_complete", step="data_extraction")
+
+        # 0b. Geração de gráficos
         def _graph_progress(info):
             step_id = f"graphs_{info['group']}"
             _emit(on_progress, "step_start", step=step_id)
@@ -478,9 +489,14 @@ def run_pipeline(
         _emit(on_progress, "phase_complete", phase=0)
     else:
         logger.warning(f"  Excel não encontrado: {excel_path}")
+        # Tentar carregar dados do cache JSON
+        if data_json_path.exists():
+            extracted_data = carregar_json(str(data_json_path))
+            logger.info("  Dados carregados do cache JSON")
         logger.info(f"  Gráficos pré-existentes: {len(list(GRAFICOS_DIR.glob('*.png')))} PNGs")
 
     logger.info(f"  Gráficos disponíveis: {len(list(GRAFICOS_DIR.glob('*.png')))} PNGs")
+    _config = extracted_data.get("config") if extracted_data else None
 
     client = None
     if not montar:
@@ -503,9 +519,16 @@ def run_pipeline(
     cap1_met = load_metodologia(1)
     cap_data = {}
     for n in range(2, 8):
+        # Usar dados dinâmicos se disponíveis, senão hardcoded
+        if extracted_data and n in extracted_data:
+            dados_texto = formatar_dados_secao(extracted_data[n], config=_config)
+        elif n in DATA_CLASSES:
+            dados_texto = formatar_dados_secao(DATA_CLASSES[n]())
+        else:
+            dados_texto = ""
         cap_data[n] = {
             "met": load_metodologia(n),
-            "dados": formatar_dados_secao(DATA_CLASSES[n]()) if n in DATA_CLASSES else "",
+            "dados": dados_texto,
         }
 
     # Inicializar ChapterResults
@@ -623,7 +646,7 @@ def run_pipeline(
     _emit(on_progress, "phase_start", phase=4, phase_name="Montagem do Documento")
     _emit(on_progress, "step_start", step="docx_assembly")
 
-    output_path = assemble_docx(chapters, resumo, conclusoes, output)
+    output_path = assemble_docx(chapters, resumo, conclusoes, output, extracted_data=extracted_data)
 
     _emit(on_progress, "step_complete", step="docx_assembly")
     _emit(on_progress, "phase_complete", phase=4)

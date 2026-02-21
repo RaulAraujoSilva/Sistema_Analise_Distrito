@@ -166,16 +166,29 @@ class BalancoMassa:
     ])
 
 
-def gerar_tabelas_resumo() -> dict:
+def gerar_tabelas_resumo(dados: dict = None) -> dict:
     """Retorna tabelas de dados estatísticos para cada seção do relatório.
     Cada entrada: {"headers": [...], "rows": [[...], ...]}
+
+    Args:
+        dados: Dict com dataclasses dinâmicas {2: VolumesEntrada, 3: PCSData, ...}.
+               Se None, usa valores hardcoded (retrocompatibilidade).
     """
-    vol = VolumesEntrada()
-    pcs = PCSData()
-    ene = EnergiaData()
-    perf = PerfisClientes()
-    inc = IncertezasData()
-    bal = BalancoMassa()
+    _cfg = dados.get("config", DistritoConfig()) if dados else DistritoConfig()
+    if dados:
+        vol = dados.get(2, VolumesEntrada())
+        pcs = dados.get(3, PCSData())
+        ene = dados.get(4, EnergiaData())
+        perf = dados.get(5, PerfisClientes())
+        inc = dados.get(6, IncertezasData())
+        bal = dados.get(7, BalancoMassa())
+    else:
+        vol = VolumesEntrada()
+        pcs = PCSData()
+        ene = EnergiaData()
+        perf = PerfisClientes()
+        inc = IncertezasData()
+        bal = BalancoMassa()
 
     tabelas = {}
 
@@ -188,7 +201,7 @@ def gerar_tabelas_resumo() -> dict:
             ["Volume Mínimo Diário", f"{vol.vol_min_nm3d:,.0f}", f"{vol.vol_min_m3h:,.2f} m³/h"],
             ["Volume Máximo Diário", f"{vol.vol_max_nm3d:,.0f}", f"{vol.vol_max_m3h:,.2f} m³/h"],
             ["Desvio Padrão", f"{vol.vol_desvio_nm3d:,.1f}", ""],
-            ["Volume Total (período)", f"{vol.vol_total_nm3:,.0f}", "183 dias"],
+            ["Volume Total (período)", f"{vol.vol_total_nm3:,.0f}", f"{_cfg.dias} dias"],
             ["Dif. Média Conc. vs Transp.", f"{vol.dif_conc_transp_media_pct:.6f}%", "Excelente"],
             ["Dif. Máxima Conc. vs Transp.", f"{vol.dif_conc_transp_max_pct:.6f}%", "< 0,01%"],
         ],
@@ -263,12 +276,18 @@ def gerar_tabelas_resumo() -> dict:
     return tabelas
 
 
-def formatar_dados_secao(obj) -> str:
-    """Converte qualquer dataclass de dados em texto legivel para prompt."""
+def formatar_dados_secao(obj, config: DistritoConfig = None) -> str:
+    """Converte qualquer dataclass de dados em texto legivel para prompt.
+
+    Args:
+        obj: Dataclass de dados (VolumesEntrada, PCSData, etc.)
+        config: DistritoConfig com período dinâmico. Se None, usa valores padrão.
+    """
+    _cfg = config or DistritoConfig()
     if isinstance(obj, VolumesEntrada):
         return (
             "VOLUMES DE ENTRADA DO DISTRITO\n"
-            f"- Periodo: 183 dias (01/04/2025 a 30/09/2025)\n"
+            f"- Periodo: {_cfg.dias} dias ({_cfg.periodo_inicio} a {_cfg.periodo_fim})\n"
             f"- Volume total: {obj.vol_total_nm3:,.0f} Nm3\n"
             f"- Volume medio diario: {obj.vol_medio_nm3d:,.1f} Nm3/d ({obj.vol_medio_m3h:,.2f} m3/h)\n"
             f"- Volume minimo diario: {obj.vol_min_nm3d:,.1f} Nm3/d ({obj.vol_min_m3h:,.2f} m3/h)\n"

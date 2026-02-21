@@ -327,7 +327,7 @@ body:not([data-theme="dark"]) .icon-moon { display: block; }
 /* --- Mode Selector --- */
 .mode-selector {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     margin-bottom: 20px;
 }
@@ -610,6 +610,117 @@ body:not([data-theme="dark"]) .icon-moon { display: block; }
 .log-entry.step-start { color: var(--azul-medio); }
 .log-entry.step-complete { color: var(--verde); }
 .log-entry.error { color: var(--vermelho); }
+
+/* =====================================================================
+   DADOS PREVIEW
+   ===================================================================== */
+
+/* Phase action buttons row */
+.phase-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Data preview grid */
+.data-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.data-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.data-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--azul-medio);
+}
+
+.data-card.expanded {
+    grid-column: 1 / -1;
+}
+
+.data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-hover);
+}
+
+.data-card-header h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--azul-medio);
+}
+
+.data-card-badge {
+    font-size: 0.75rem;
+    background: var(--azul-medio);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.data-card-body {
+    padding: 14px 18px;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-item:last-child { border-bottom: none; }
+
+.data-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.data-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.data-preview-text {
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-primary);
+    margin: 0;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.data-card.expanded .data-preview-text {
+    max-height: none;
+}
+
+.data-more {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--azul-medio);
+    padding-top: 8px;
+    font-weight: 500;
+}
 
 /* =====================================================================
    GALLERY

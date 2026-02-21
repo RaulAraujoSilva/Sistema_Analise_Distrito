@@ -27,6 +27,7 @@ function navigateTo(section) {
     document.getElementById(`sec-${section}`).classList.add('active');
 
     // Lazy load content
+    if (section === 'dados') loadDataPreview();
     if (section === 'graficos') loadGraficos();
     if (section === 'diagramas') loadDiagramas();
     if (section === 'textos') loadTextos();
@@ -110,8 +111,8 @@ function checkStartBtn() {
     const hasFile = !uploadStatus.classList.contains('hidden') && !uploadStatus.classList.contains('error');
     const hasKey = apiKeyInput.value.trim().length > 10;
     const mode = document.querySelector('input[name="mode"]:checked').value;
-    // For "montar" mode, only file is needed (no API key)
-    btnStart.disabled = !(hasFile && (hasKey || mode === 'montar'));
+    // For "montar" and "step" modes, only file is needed (no API key initially)
+    btnStart.disabled = !(hasFile && (hasKey || mode === 'montar' || mode === 'step'));
 }
 
 document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', checkStartBtn));
@@ -131,6 +132,12 @@ btnCancel.addEventListener('click', async () => {
 async function startPipeline() {
     const apiKey = apiKeyInput.value.trim();
     const mode = document.querySelector('input[name="mode"]:checked').value;
+
+    // Step-by-step mode: run extraction first, then navigate to Dados tab
+    if (mode === 'step') {
+        await runPhaseExtract();
+        return;
+    }
 
     btnStart.disabled = true;
     btnStart.textContent = 'Iniciando...';
@@ -175,7 +182,7 @@ function connectSSE() {
         const data = JSON.parse(e.data);
         updateSubstep(data.step, 'active');
         updateChapterCard(data.chapter, 'active');
-        updateProgress(data.progress, data.completed || 0, 29);
+        updateProgress(data.progress, data.completed || 0, 36);
         addLog(`  Iniciando: ${data.step_label}`, 'step-start');
     });
 
@@ -195,12 +202,12 @@ function connectSSE() {
     evtSource.addEventListener('done', (e) => {
         evtSource.close();
         clearInterval(pipelineTimer);
-        updateProgress(1.0, 29, 29);
+        updateProgress(1.0, 36, 36);
         document.getElementById('pipeline-subtitle').textContent = 'Pipeline concluído com sucesso!';
         document.getElementById('pipeline-subtitle').style.color = 'var(--verde)';
         addLog('Pipeline concluído!', 'step-complete');
         // Mark all phases complete
-        [1,2,3,4].forEach(p => updatePhase(p, 'complete'));
+        [0,1,2,3,4].forEach(p => updatePhase(p, 'complete'));
         showToast('Pipeline concluído! Relatório disponível para download.', 'success');
         btnStart.disabled = false;
         btnCancel.classList.add('hidden');
@@ -305,6 +312,146 @@ function addLog(text, cls) {
     entry.textContent = `[${time}] ${text}`;
     entries.appendChild(entry);
     entries.scrollTop = entries.scrollHeight;
+}
+
+// =====================================================================
+// DADOS - Phase-by-phase extraction & preview
+// =====================================================================
+let dataPreviewLoaded = false;
+
+// Button references
+const btnExtract = document.getElementById('btn-extract');
+const btnGenGraphs = document.getElementById('btn-gen-graphs');
+const dataStatus = document.getElementById('data-status');
+const dataStatusText = document.getElementById('data-status-text');
+
+btnExtract.addEventListener('click', () => runPhaseExtract());
+btnGenGraphs.addEventListener('click', () => runPhaseGraphs());
+
+async function runPhaseExtract() {
+    btnExtract.disabled = true;
+    btnExtract.textContent = 'Extraindo...';
+    dataStatus.classList.add('hidden');
+
+    try {
+        const res = await fetch('/api/phase/extract', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            dataStatus.classList.remove('hidden', 'error');
+            const r = data.resumo;
+            dataStatusText.textContent =
+                `Dados extraídos: ${r.vol_total_nm3.toLocaleString('pt-BR')} Nm³ total, ` +
+                `PCS médio ${r.pcs_media_kcal} kcal, ${r.n_clientes} clientes, ` +
+                `Balanço: ${r.balanco_resultado}`;
+            showToast('Dados extraídos com sucesso!', 'success');
+            btnGenGraphs.disabled = false;
+
+            // Navigate to Dados tab and load preview
+            navigateTo('dados');
+            dataPreviewLoaded = false;
+            loadDataPreview();
+        } else {
+            dataStatus.classList.remove('hidden');
+            dataStatus.classList.add('error');
+            dataStatusText.textContent = data.detail || 'Erro na extração';
+            showToast(data.detail || 'Erro na extração', 'error');
+        }
+    } catch (err) {
+        showToast('Erro de conexão', 'error');
+    }
+    btnExtract.disabled = false;
+    btnExtract.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 3v18"/></svg> Extrair Dados';
+}
+
+async function loadDataPreview() {
+    if (dataPreviewLoaded) return;
+    const grid = document.getElementById('data-preview-grid');
+    try {
+        const res = await fetch('/api/phase/extract/preview');
+        if (!res.ok) return; // no data yet
+        const data = await res.json();
+        grid.innerHTML = '';
+
+        // Config card
+        if (data.config) {
+            const card = document.createElement('div');
+            card.className = 'data-card';
+            card.innerHTML = `
+                <div class="data-card-header">
+                    <h4>Configuração</h4>
+                </div>
+                <div class="data-card-body">
+                    <div class="data-item"><span class="data-label">Período</span><span class="data-value">${data.config.periodo}</span></div>
+                    <div class="data-item"><span class="data-label">Dias</span><span class="data-value">${data.config.dias}</span></div>
+                </div>
+            `;
+            grid.appendChild(card);
+        }
+
+        // Section cards
+        for (const [name, text] of Object.entries(data.sections || {})) {
+            const card = document.createElement('div');
+            card.className = 'data-card';
+            const lines = text.split('\n').filter(l => l.trim());
+            const previewLines = lines.slice(0, 12);
+            const hasMore = lines.length > 12;
+            card.innerHTML = `
+                <div class="data-card-header">
+                    <h4>${name}</h4>
+                    <span class="data-card-badge">${lines.length} linhas</span>
+                </div>
+                <div class="data-card-body">
+                    <pre class="data-preview-text">${previewLines.join('\n')}</pre>
+                    ${hasMore ? '<div class="data-more">... mais dados</div>' : ''}
+                </div>
+            `;
+            // Toggle full view on click
+            card.addEventListener('click', () => {
+                const pre = card.querySelector('.data-preview-text');
+                const more = card.querySelector('.data-more');
+                if (card.classList.contains('expanded')) {
+                    pre.textContent = previewLines.join('\n');
+                    if (more) more.style.display = '';
+                    card.classList.remove('expanded');
+                } else {
+                    pre.textContent = text;
+                    if (more) more.style.display = 'none';
+                    card.classList.add('expanded');
+                }
+            });
+            grid.appendChild(card);
+        }
+
+        dataPreviewLoaded = true;
+        if (!grid.children.length) {
+            grid.innerHTML = '<div class="gallery-loading">Nenhum dado extraído ainda.</div>';
+        }
+    } catch {
+        // No data extracted yet — keep placeholder
+    }
+}
+
+async function runPhaseGraphs() {
+    btnGenGraphs.disabled = true;
+    btnGenGraphs.textContent = 'Gerando gráficos...';
+
+    try {
+        const res = await fetch('/api/phase/graphs', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            showToast(`${data.count} gráficos gerados!`, 'success');
+            // Reset gallery cache so it reloads fresh
+            graficosData = null;
+            // Navigate to Graficos tab
+            navigateTo('graficos');
+        } else {
+            showToast(data.detail || 'Erro ao gerar gráficos', 'error');
+        }
+    } catch {
+        showToast('Erro de conexão', 'error');
+    }
+    btnGenGraphs.disabled = false;
+    btnGenGraphs.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 17 3-6 3 6"/></svg> Gerar Gráficos';
 }
 
 // =====================================================================
