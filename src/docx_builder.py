@@ -890,66 +890,55 @@ class AuditReportBuilder:
 
     def add_notebook_appendix(self, notebooks: list):
         """
-        Adiciona apêndice com código e resultados dos notebooks Jupyter.
-        notebooks: lista de {"path": str, "titulo": str}
+        Adiciona apêndice com páginas dos notebooks (PDF → imagens).
+        notebooks: lista de {"path": str (PDF), "titulo": str}
         """
-        import json
+        import fitz  # PyMuPDF
+        from io import BytesIO
 
         self.doc.add_page_break()
         self.doc.add_heading(
             "Apêndice A — Código-Fonte e Resultados dos Notebooks", level=1
         )
 
-        # Parágrafo introdutório
         intro = self.doc.add_paragraph()
         run = intro.add_run(
             "Este apêndice apresenta o código-fonte Python e os respectivos "
             "resultados de execução dos 7 notebooks Jupyter utilizados na "
             "análise de dados desta auditoria. Os notebooks foram executados "
-            "sequencialmente e seus outputs preservados integralmente."
+            "no Google Colab e seus outputs preservados integralmente."
         )
         run.font.size = Pt(11)
         intro.paragraph_format.space_after = Pt(12)
 
         for idx, nb_info in enumerate(notebooks, 1):
-            nb_path = nb_info["path"]
+            pdf_path = nb_info["path"]
             titulo = nb_info["titulo"]
 
-            # Page break entre notebooks (exceto primeiro)
             if idx > 1:
                 self.doc.add_page_break()
 
             self.doc.add_heading(f"A.{idx} {titulo}", level=2)
 
-            # Parse notebook JSON
             try:
-                with open(nb_path, "r", encoding="utf-8") as f:
-                    nb = json.load(f)
-            except (FileNotFoundError, json.JSONDecodeError) as e:
+                pdf_doc = fitz.open(pdf_path)
+            except Exception as e:
                 p = self.doc.add_paragraph()
-                run = p.add_run(f"Erro ao carregar notebook: {e}")
+                run = p.add_run(f"Erro ao carregar PDF: {e}")
                 run.font.color.rgb = RGBColor(0xFF, 0x00, 0x00)
                 continue
 
-            cells = nb.get("cells", [])
+            for page_num in range(len(pdf_doc)):
+                page = pdf_doc[page_num]
+                pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+                img_stream = BytesIO(pix.tobytes("png"))
 
-            for cell in cells:
-                cell_type = cell.get("cell_type", "")
-                source = cell.get("source", [])
+                self.doc.add_picture(img_stream, width=Inches(6.2))
+                last_paragraph = self.doc.paragraphs[-1]
+                last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                last_paragraph.paragraph_format.space_after = Pt(2)
 
-                if cell_type == "markdown":
-                    text = "".join(source).strip()
-                    if text:
-                        self.add_section_from_markdown(text)
-
-                elif cell_type == "code":
-                    exec_count = cell.get("execution_count")
-                    outputs = cell.get("outputs", [])
-                    self.add_code_cell(source, exec_count)
-                    if outputs:
-                        self.add_output_cell(outputs)
-
-                # raw cells: skip
+            pdf_doc.close()
 
     def save(self, filename: str):
         """Salva o documento DOCX."""

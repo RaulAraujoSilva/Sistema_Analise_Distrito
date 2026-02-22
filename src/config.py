@@ -21,6 +21,7 @@ SRC_DIR = PROJECT_ROOT / "src"
 
 # Notebooks
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+COLABS_PDF_DIR = PROJECT_ROOT / "data" / "colabs_pdf"
 
 if IS_VERCEL:
     _TMP = Path("/tmp")
@@ -44,17 +45,24 @@ EXCEL_DEFAULT = "Analise de Condições de Operação de Distrito.xlsx"
 # Notebooks (para apêndice do relatório)
 NOTEBOOK_LIST = [
     {"file": "01_leitura_e_exploracao.ipynb",
+     "pdf": "colab_01.pdf",
      "titulo": "Leitura e Exploração dos Dados"},
     {"file": "02_analise_volumes_entrada.ipynb",
+     "pdf": "colab_02.pdf",
      "titulo": "Análise de Volumes de Entrada"},
     {"file": "03_analise_pcs.ipynb",
+     "pdf": "colab_03.pdf",
      "titulo": "Análise do Poder Calorífico Superior"},
     {"file": "04_calculo_energia.ipynb",
+     "pdf": "colab_04.pdf",
      "titulo": "Cálculo e Validação de Energia"},
     {"file": "05_perfis_clientes.ipynb",
+     "pdf": "colab_05.pdf",
      "titulo": "Perfis de Consumo dos Clientes"},
     {"file": "06_sumario_e_incertezas.ipynb",
+     "pdf": "colab_06.pdf",
      "titulo": "Cálculo de Incertezas de Medição"},
     {"file": "07_balanco_massa.ipynb",
+     "pdf": "colab_07.pdf",
      "titulo": "Balanço de Massa com Bandas de Incerteza"},
 ]

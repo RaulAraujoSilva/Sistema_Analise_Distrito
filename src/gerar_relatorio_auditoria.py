@@ -42,7 +42,7 @@ from docx_builder import AuditReportBuilder
 # =====================================================================
 from config import (
     GRAFICOS_DIR, CACHE_DIR, METODOLOGIA_DIR, DIAGRAMAS_DIR,
-    REPORTS_DIR, NOTEBOOKS_DIR, NOTEBOOK_LIST, DATA_DIR, EXCEL_DEFAULT,
+    REPORTS_DIR, NOTEBOOKS_DIR, COLABS_PDF_DIR, NOTEBOOK_LIST, DATA_DIR, EXCEL_DEFAULT,
 )
 from graph_generator import gerar_todos_graficos
 from extrator_dados import extrair_todos, salvar_json, carregar_json
@@ -386,9 +386,9 @@ def assemble_docx(chapters: dict, resumo: str, conclusoes: str, output: str = OU
     if conclusoes:
         report.add_section_from_markdown(conclusoes)
 
-    # ---- Apêndice: Notebooks Jupyter ----
+    # ---- Apêndice: Notebooks Jupyter (PDFs do Colab) ----
     NOTEBOOKS = [
-        {"path": str(NOTEBOOKS_DIR / nb["file"]), "titulo": nb["titulo"]}
+        {"path": str(COLABS_PDF_DIR / nb["pdf"]), "titulo": nb["titulo"]}
         for nb in NOTEBOOK_LIST
     ]
     logger.info("  Adicionando Apêndice A (Notebooks)...")
