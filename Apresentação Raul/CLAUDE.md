@@ -94,3 +94,10 @@ npm run build    # Build para dist/
 - Word cloud: implementação custom com CSS flexbox (sem biblioteca externa)
 - Exercícios usam mesmo Upstash Redis do quiz (keys separadas)
 - Histograma do Exercício 3: bins de 50 mil m³, BarChart vertical
+
+## Sistema Web de Análise (v2.5)
+- **URL**: https://sistema-analise-distrito-dnly.vercel.app/
+- **Apêndice A**: Usa PDFs exportados do Google Colab (`data/colabs_pdf/`) em vez de parsear .ipynb
+- **PyMuPDF**: Renderiza páginas PDF como PNG a 144 DPI (matrix 2x), embeda via BytesIO (sem temp files)
+- **Dependency pins**: `numpy<2.0`, `pandas<3.0`, `matplotlib<3.10`, `seaborn<0.14` (compatibilidade Vercel)
+- **Pipeline**: 36 etapas, ~2min, DOCX ~19MB, PPTX ~1MB
